@@ -1,0 +1,2 @@
+# We don't want to add the venv to github
+/venv
