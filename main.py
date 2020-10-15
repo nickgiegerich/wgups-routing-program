@@ -22,7 +22,7 @@ package_hash_table = Hash(size)
 package_hash_table = package_data.parse_package_data()
 
 # printing out hash table details for packages
-print(package_hash_table.list)
+print(package_hash_table.list[1])
 print(package_hash_table.size)
 print(package_hash_table.get(34))
 
@@ -49,7 +49,9 @@ distance_data = d.clean_and_sort_data()
 # distance labels
 distance_labels = d.get_labels()
 
-print(distance_labels)
+for item in distance_data[0][1]:
+    print(item[1])
+print(distance_data[0][1][0])
 
 # ____________________________________________
 # | THIRD: load distance data into table    |
@@ -60,7 +62,22 @@ truck_one = Truck()
 truck_two = Truck()
 truck_three = Truck()
 
-# let's add packages to the trucks regardless of constraints
+
+# now we add packages that are the closest regardless of other constraints - CURRENT
+temp_hash = package_hash_table  # might not need temp
+while len(truck_one.truck) != truck_one.capacity:
+    if len(truck_one.truck) == 0:  # nothing is added so we find closest address to the HUB
+        closest_distance = 10000000
+        current_addr = 'HUB'
+        for item in distance_data[0][1]:
+            if float(item[1]) != 0:
+                if
+                closest_addr = item[0]
+                closest_distance = item[1]
+
+
+
+# let's add packages to the trucks regardless of constraints - OLD
 temp_hash = package_hash_table  # might not need temp
 for i in range(temp_hash.size):
     if temp_hash.list[i] is not None:
@@ -73,8 +90,31 @@ for i in range(temp_hash.size):
         else:
             print("No room on trucks!")
 
-print(truck_one.truck[0])
-print(truck_two.truck)
-print(truck_three.truck)
+# print(truck_one.truck[0][1].status)
+# print(truck_two.truck)
+# print(truck_three.truck)
+miles = 0
+while len(truck_one.truck) != 0:
+    status = truck_one.truck[0][1].status
+    if status == 'At HUB':
+        for i in range(len(truck_one.truck)):  # changes all statuses of the packages
+            truck_one.truck[i][1].set_status('en route')
+        current_addr = 'HUB'
+        next_addr = truck_one.truck[0][1].address
+        for i in range(len(distance_data)):
+            if distance_data[i][0] == current_addr:
+                for item in distance_data[i][1]:
+                    if item[0] == next_addr:
+                        miles += float(item[1])
+                        current_addr = next_addr
+    else:
+        next_addr = truck_one.truck[0][1].address
+        for i in range(len(distance_data)):
+            if distance_data[i][0] == current_addr:
+                for item in distance_data[i][1]:
+                    if item[0] == next_addr:
+                        miles += float(item[1])
+                        current_addr = next_addr
+    truck_one.remove_package(truck_one.truck[0])
+print(miles)
 
-# while len(truck_one.truck) != 0:
