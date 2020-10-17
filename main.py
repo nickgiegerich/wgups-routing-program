@@ -62,31 +62,119 @@ truck_one = Truck()
 truck_two = Truck()
 truck_three = Truck()
 
-# now we add packages that are the closest regardless of other constraints - CURRENT
-temp_hash = package_hash_table  # might not need temp
-closest_addr = ''
+
+# STEP 1: Load the packages onto the truck based on constraints while not at capacity
+# if the package is not None
+# if the truck is not full
+# if the pkg time is not EOD meaning it has a certain time to be delivered
+# or if
+print(package_hash_table.list)
+iteration = 0
 while len(truck_one.truck) != truck_one.capacity:
-    if len(truck_one.truck) == 0:  # base case, the truck is empty and at the HUB, find closest addr to HUB
-        closest_distance = None
-        current_addr = 'HUB'
-        for item in distance_data[0][1]:
-            if closest_distance is None:
-                closest_distance = float(item[1])  # could be 0.0
-            compare_dist = float(item[1])  # could also be 0.0
-            if compare_dist < closest_distance and compare_dist != 0.0 or closest_distance == 0.0:
-                closest_distance = compare_dist
-                closest_addr = item[0]
-                address_dist_pair = [closest_addr, closest_distance]
-        truck_one.add_package(address_dist_pair)
-        print(truck_one.truck)
-        print('The closest distance to the', current_addr, 'is:', closest_distance, 'and the address is:', closest_addr)
-        break
-    else:  # the truck already has packages on it
-        for i in range(len(distance_data)):
-            if distance_data[i][0] == closest_addr:
-                print('')
+    for i in range(len(package_hash_table.list)):
+        if package_hash_table.list[i] is not None and package_hash_table.list[i] not in truck_one.truck:
+            if len(truck_one.truck) != truck_one.capacity:
+                if package_hash_table.list[i][1].delivery_time != 'EOD':
+                    truck_one.add_package(package_hash_table.list[i])
+                elif iteration == 1 and package_hash_table.list[i][1].notes != 'Can only be on truck 2':
+                    truck_one.add_package(package_hash_table.list[i])
+    iteration += 1  # we have gone through the whole list increment iteration
+print(truck_one.truck)
+
+# STEP 2: Organize/find the addresses that the truck needs to visit
+addresses_to_visit = []
+for pkg in truck_one.truck:
+    addresses_to_visit.append(pkg[1].address)
+print(addresses_to_visit)
+
+# STEP 3: Take each of those addresses and organize by closest to preceding address starting at HUB
+#   then deliver pkgs when we find the next closest addr to go to
+starting_addr = 'HUB'
+nearest_dist = 0
+
+total_miles = 0
+
+closest_dists = []
+visited_addresses = []
+while len(addresses_to_visit) != 0:
+    for i in range(len(distance_data)):
+        if distance_data[i][0] == starting_addr:
+            for addrs in distance_data[i][1]:
+                if addrs[0] in addresses_to_visit:
+                    if float(addrs[1]) < nearest_dist or nearest_dist == 0:
+                        nearest_dist = float(addrs[1])
+                        next_addr = addrs[0]
+            closest_dists.append(nearest_dist)
+            total_miles += nearest_dist
+            addresses_to_visit.remove(next_addr)
+            visited_addresses.append(next_addr)
+            starting_addr = next_addr
+            nearest_dist = 0
+print(addresses_to_visit)
+print(total_miles/18)
+print(distance_data)
+print(closest_dists)
+print(visited_addresses)
 
 
+# now we add packages that are the closest regardless of other constraints - CURRENT
+# temp_hash = package_hash_table  # might not need temp
+# closest_addr = ''
+# closest_distance = None
+# boolean = True
+# current_addr = 'HUB'
+# found_current_addr = False
+# index_of_addr = 0
+# address_dist_pair = ['', '']
+# address_queue = []
+#
+# while len(address_queue) != truck_one.capacity:
+#     if len(address_queue) == 0:  # base case, the truck is empty and at the HUB, find closest addr to HUB
+#         for item in distance_data[0][1]:
+#
+#             if closest_distance is None:
+#                 closest_distance = float(item[1])  # could be 0.0
+#
+#             compare_dist = float(item[1])  # could also be 0.0
+#             if compare_dist < closest_distance and compare_dist != 0.0 or closest_distance == 0.0:
+#                 closest_distance = compare_dist
+#                 closest_addr = item[0]
+#                 address_dist_pair = [closest_addr, closest_distance]
+#         address_queue.append(address_dist_pair)
+#         print(address_queue)
+#         print('The closest distance to the', current_addr, 'is:', closest_distance, 'and the address is:', closest_addr)
+#     else:  # the truck already has packages on it
+#
+#         current_addr = closest_addr  # the curr addr now becomes the closest addr
+#         closest_distance = None  # reset the closest dist to None
+#
+#         for i in range(len(distance_data)):  # iterate over the distance data to find where the current addr lives
+#             if distance_data[i][0] == current_addr:  # found where the current_addr key is
+#                 index_of_addr = i
+#                 break
+#
+#         for item in distance_data[index_of_addr][1]:
+#
+#             if closest_distance is None:  # first iteration closest distance is None
+#                 closest_addr = item[0]  # this will be HUB
+#                 closest_distance = float(item[1])  # setting the closest distance to first address regardless
+#
+#             compare_dist = float(item[1])  # getting the distance, on first iteration same as closest
+#
+#             if compare_dist < closest_distance and compare_dist != 0.0 or closest_distance == 0.0:
+#                 closest_distance = compare_dist
+#                 closest_addr = item[0]
+#                 address_dist_pair = [closest_addr, closest_distance]
+#
+#             elif closest_addr == 'HUB' or closest_addr in address_queue:
+#                 closest_distance = compare_dist
+#                 closest_addr = item[0]
+#                 address_dist_pair = [closest_addr, closest_distance]
+#
+#         address_queue.append(address_dist_pair)
+#         # print(address_queue)
+#         # break
+# print(address_queue)
 
 # let's add packages to the trucks regardless of constraints - OLD
 # temp_hash = package_hash_table  # might not need temp
