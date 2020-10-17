@@ -49,10 +49,6 @@ distance_data = d.clean_and_sort_data()
 # distance labels
 distance_labels = d.get_labels()
 
-# for item in distance_data[0][1]:
-#     print(item[1])
-# print(distance_data[0][1][0])
-
 # ____________________________________________
 # | THIRD: load distance data into table    |
 # ____________________________________________
@@ -82,36 +78,49 @@ while len(truck_one.truck) != truck_one.capacity:
 print(truck_one.truck)
 
 # STEP 2: Organize/find the addresses that the truck needs to visit
-addresses_to_visit = []
+
+addresses_to_visit = []  # list to hold the addresses that we need to visit
+
 for pkg in truck_one.truck:
-    addresses_to_visit.append(pkg[1].address)
+    if pkg[1].address not in addresses_to_visit:
+        addresses_to_visit.append(pkg[1].address)
 print(addresses_to_visit)
 
 # STEP 3: Take each of those addresses and organize by closest to preceding address starting at HUB
 #   then deliver pkgs when we find the next closest addr to go to
 starting_addr = 'HUB'
-nearest_dist = 0
+next_addr = ''
 
-total_miles = 0
+nearest_dist = 0  # value to store the nearest distance from the start address
+total_miles = 0  # total miles, gets incremented at each address stop
 
-closest_dists = []
-visited_addresses = []
-while len(addresses_to_visit) != 0:
-    for i in range(len(distance_data)):
-        if distance_data[i][0] == starting_addr:
-            for addrs in distance_data[i][1]:
-                if addrs[0] in addresses_to_visit:
-                    if float(addrs[1]) < nearest_dist or nearest_dist == 0:
+closest_dists = []  # a list of the closest distances in miles
+visited_addresses = []  # a list of the addresses that were visited
+iterations = 0
+
+while len(addresses_to_visit) != 0:  # remove an address from this list every time it becomes the starting address
+
+    for i in range(len(distance_data)):  # for each index in distance data
+
+        if distance_data[i][0] == starting_addr:  # if the distance data 'key' is equal to the starting address
+
+            for addrs in distance_data[i][1]:  # for each address tied to starting address
+
+                if addrs[0] in addresses_to_visit:  # if the address that we are at is in addresses to visit comp dist
+                    if float(addrs[1]) < nearest_dist or nearest_dist == 0 and iterations == 0:
                         nearest_dist = float(addrs[1])
                         next_addr = addrs[0]
+                        iterations += 1
             closest_dists.append(nearest_dist)
             total_miles += nearest_dist
             addresses_to_visit.remove(next_addr)
             visited_addresses.append(next_addr)
             starting_addr = next_addr
             nearest_dist = 0
+            iterations = 0
+            break
 print(addresses_to_visit)
-print(total_miles/18)
+print(total_miles)
 print(distance_data)
 print(closest_dists)
 print(visited_addresses)
