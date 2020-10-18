@@ -7,50 +7,44 @@ from file_reader import File
 
 # ____________________________________________
 # | FIRST: load package data into hash table |
+# |   - step 1: read in package file         |
+# |   - step 2: get the num of rows in data  |
+# |   - step 3: create hash table object     |
+# |   - step 4: parse data into hash table   |
 # ____________________________________________
 
-# construct a file reader object
 package_data = File('WGUPS Package File.csv')
 
-# get the size of the data list
 size = package_data.get_row_count()
 
-# construct the hash table using size
 package_hash_table = Hash(size)
 
-# parse the data into a hash table
 package_hash_table = package_data.parse_package_data()
-
-# printing out hash table details for packages
-# print(package_hash_table.list[1])
-# print(package_hash_table.size)
-# print(package_hash_table.get(34))
 
 # ____________________________________________
 # | SECOND: load distance data into table    |
+# |   - step 1: read in raw distance data    |
+# |   - step 2: clean up distance data       |
+# |   - step 3: create hash table object     |
+# |   - step 4: parse data into hash table   |
 # ____________________________________________
-# code for testing distance table
-distance_table = File('WGUPS Distance Table TEST.csv')
 
-# set up empty data arrays
-raw_data = []
-distance_data = []
-distance_labels = []
+distance_table = File('WGUPS Distance Table.csv')
 
-# parse and store the raw_data
 raw_data = distance_table.parse_distance_data()
 
-# set up a distance object
 d = Distance(raw_data)
 
-# cleaned data list
 distance_data = d.clean_and_sort_data()
 
-# distance labels
-distance_labels = d.get_labels()
+distance_labels = d.get_labels()  # MIGHT NOT NEED THIS
 
 # ____________________________________________
-# | THIRD: load distance data into table    |
+# | THIRD: load trucks and deliver packages  |
+# |   - step 1: read in raw distance data    |
+# |   - step 2: clean up distance data       |
+# |   - step 3: create hash table object     |
+# |   - step 4: parse data into hash table   |
 # ____________________________________________
 
 # we have a max of three trucks
@@ -107,7 +101,7 @@ while len(addresses_to_visit) != 0:  # remove an address from this list every ti
             for addrs in distance_data[i][1]:  # for each address tied to starting address
 
                 if addrs[0] in addresses_to_visit:  # if the address that we are at is in addresses to visit comp dist
-                    if float(addrs[1]) < nearest_dist or nearest_dist == 0 and iterations == 0:
+                    if float(addrs[1]) < nearest_dist or nearest_dist == 0:
                         nearest_dist = float(addrs[1])
                         next_addr = addrs[0]
                         iterations += 1
@@ -117,7 +111,6 @@ while len(addresses_to_visit) != 0:  # remove an address from this list every ti
             visited_addresses.append(next_addr)
             starting_addr = next_addr
             nearest_dist = 0
-            iterations = 0
             break
 print(addresses_to_visit)
 print(total_miles)
