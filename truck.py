@@ -4,6 +4,7 @@ class Truck:
         self.speed = 18
         self.miles = 0
         self.capacity = 16
+        self.status = 'At HUB'
 
     def add_package(self, package):
         self.truck.append(package)
@@ -13,3 +14,6 @@ class Truck:
 
     def add_miles(self, miles):
         self.miles += miles
+
+    def set_status(self, status):
+        self.status = status

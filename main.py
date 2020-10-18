@@ -2,6 +2,7 @@ from distance import Distance
 from hash_table import Hash
 from truck import Truck
 from file_reader import File
+import delivery_process
 
 # driver code
 
@@ -47,6 +48,14 @@ distance_labels = d.get_labels()  # MIGHT NOT NEED THIS
 # |   - step 4: parse data into hash table   |
 # ____________________________________________
 
+# TODO: make a separate file for loading trucks and delivering packages - DONE
+# TODO: parameters to pass into the algorithm should be distance data, package data, *optional time
+# TODO: make the algorithm keep track of time starting at 8:00
+# TODO: allow for user input via the command line
+# TODO: calculate my run time -- off first glance I think my algo runs in O(n^2)
+
+delivery_process.deliver_packages(package_hash_table, distance_data)
+
 # we have a max of three trucks
 truck_one = Truck()
 truck_two = Truck()
@@ -58,7 +67,7 @@ truck_three = Truck()
 # if the truck is not full
 # if the pkg time is not EOD meaning it has a certain time to be delivered
 # or if
-print(package_hash_table.list)
+# print(package_hash_table.list)
 iteration = 0
 while len(truck_one.truck) != truck_one.capacity:
     for i in range(len(package_hash_table.list)):
@@ -69,7 +78,7 @@ while len(truck_one.truck) != truck_one.capacity:
                 elif iteration == 1 and package_hash_table.list[i][1].notes != 'Can only be on truck 2':
                     truck_one.add_package(package_hash_table.list[i])
     iteration += 1  # we have gone through the whole list increment iteration
-print(truck_one.truck)
+# print(truck_one.truck)
 
 # STEP 2: Organize/find the addresses that the truck needs to visit
 
@@ -78,7 +87,7 @@ addresses_to_visit = []  # list to hold the addresses that we need to visit
 for pkg in truck_one.truck:
     if pkg[1].address not in addresses_to_visit:
         addresses_to_visit.append(pkg[1].address)
-print(addresses_to_visit)
+# print(addresses_to_visit)
 
 # STEP 3: Take each of those addresses and organize by closest to preceding address starting at HUB
 #   then deliver pkgs when we find the next closest addr to go to
@@ -112,11 +121,11 @@ while len(addresses_to_visit) != 0:  # remove an address from this list every ti
             starting_addr = next_addr
             nearest_dist = 0
             break
-print(addresses_to_visit)
-print(total_miles)
-print(distance_data)
-print(closest_dists)
-print(visited_addresses)
+# print(addresses_to_visit)
+# print((total_miles/18)*60)
+# print(distance_data)
+# print(closest_dists)
+# print(visited_addresses)
 
 
 # now we add packages that are the closest regardless of other constraints - CURRENT
