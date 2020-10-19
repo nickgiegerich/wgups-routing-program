@@ -56,71 +56,76 @@ distance_labels = d.get_labels()  # MIGHT NOT NEED THIS
 
 delivery_process.deliver_packages(package_hash_table, distance_data)
 
+
+
+
 # we have a max of three trucks
-truck_one = Truck()
-truck_two = Truck()
-truck_three = Truck()
-
-
-# STEP 1: Load the packages onto the truck based on constraints while not at capacity
-# if the package is not None
-# if the truck is not full
-# if the pkg time is not EOD meaning it has a certain time to be delivered
-# or if
-# print(package_hash_table.list)
-iteration = 0
-while len(truck_one.truck) != truck_one.capacity:
-    for i in range(len(package_hash_table.list)):
-        if package_hash_table.list[i] is not None and package_hash_table.list[i] not in truck_one.truck:
-            if len(truck_one.truck) != truck_one.capacity:
-                if package_hash_table.list[i][1].delivery_time != 'EOD':
-                    truck_one.add_package(package_hash_table.list[i])
-                elif iteration == 1 and package_hash_table.list[i][1].notes != 'Can only be on truck 2':
-                    truck_one.add_package(package_hash_table.list[i])
-    iteration += 1  # we have gone through the whole list increment iteration
+# truck_one = Truck()
+# truck_two = Truck()
+# truck_three = Truck()
+#
+#
+# # STEP 1: Load the packages onto the truck based on constraints while not at capacity
+# # if the package is not None
+# # if the truck is not full
+# # if the pkg time is not EOD meaning it has a certain time to be delivered
+# # or if
+# # print(package_hash_table.list)
+# iteration = 0
+# while len(truck_one.truck) != truck_one.capacity:
+#     for i in range(len(package_hash_table.list)):
+#         if package_hash_table.list[i] is not None and package_hash_table.list[i] not in truck_one.truck:
+#             if len(truck_one.truck) != truck_one.capacity:
+#                 if package_hash_table.list[i][1].delivery_time != 'EOD':
+#                     truck_one.add_package(package_hash_table.list[i])
+#                 elif iteration == 1 and package_hash_table.list[i][1].notes != 'Can only be on truck 2':
+#                     truck_one.add_package(package_hash_table.list[i])
+#     iteration += 1  # we have gone through the whole list increment iteration
 # print(truck_one.truck)
 
 # STEP 2: Organize/find the addresses that the truck needs to visit
 
-addresses_to_visit = []  # list to hold the addresses that we need to visit
+# addresses_to_visit = []  # list to hold the addresses that we need to visit
+#
+# for pkg in truck_one.truck:
+#     if pkg[1].address not in addresses_to_visit:
+#         addresses_to_visit.append(pkg[1].address)
+# # print(addresses_to_visit)
+#
+# # STEP 3: Take each of those addresses and organize by closest to preceding address starting at HUB
+# #   then deliver pkgs when we find the next closest addr to go to
+# starting_addr = 'HUB'
+# next_addr = ''
+#
+# nearest_dist = 0  # value to store the nearest distance from the start address
+# total_miles = 0  # total miles, gets incremented at each address stop
+#
+# closest_dists = []  # a list of the closest distances in miles
+# visited_addresses = []  # a list of the addresses that were visited
+# iterations = 0
+#
+# while len(addresses_to_visit) != 0:  # remove an address from this list every time it becomes the starting address
+#
+#     for i in range(len(distance_data)):  # for each index in distance data
+#
+#         if distance_data[i][0] == starting_addr:  # if the distance data 'key' is equal to the starting address
+#
+#             for addrs in distance_data[i][1]:  # for each address tied to starting address
+#
+#                 if addrs[0] in addresses_to_visit:  # if the address that we are at is in addresses to visit comp dist
+#                     if float(addrs[1]) < nearest_dist or nearest_dist == 0:
+#                         nearest_dist = float(addrs[1])
+#                         next_addr = addrs[0]
+#                         iterations += 1
+#             closest_dists.append(nearest_dist)
+#             total_miles += nearest_dist
+#             addresses_to_visit.remove(next_addr)
+#             visited_addresses.append(next_addr)
+#             starting_addr = next_addr
+#             nearest_dist = 0
+#             break
 
-for pkg in truck_one.truck:
-    if pkg[1].address not in addresses_to_visit:
-        addresses_to_visit.append(pkg[1].address)
-# print(addresses_to_visit)
 
-# STEP 3: Take each of those addresses and organize by closest to preceding address starting at HUB
-#   then deliver pkgs when we find the next closest addr to go to
-starting_addr = 'HUB'
-next_addr = ''
-
-nearest_dist = 0  # value to store the nearest distance from the start address
-total_miles = 0  # total miles, gets incremented at each address stop
-
-closest_dists = []  # a list of the closest distances in miles
-visited_addresses = []  # a list of the addresses that were visited
-iterations = 0
-
-while len(addresses_to_visit) != 0:  # remove an address from this list every time it becomes the starting address
-
-    for i in range(len(distance_data)):  # for each index in distance data
-
-        if distance_data[i][0] == starting_addr:  # if the distance data 'key' is equal to the starting address
-
-            for addrs in distance_data[i][1]:  # for each address tied to starting address
-
-                if addrs[0] in addresses_to_visit:  # if the address that we are at is in addresses to visit comp dist
-                    if float(addrs[1]) < nearest_dist or nearest_dist == 0:
-                        nearest_dist = float(addrs[1])
-                        next_addr = addrs[0]
-                        iterations += 1
-            closest_dists.append(nearest_dist)
-            total_miles += nearest_dist
-            addresses_to_visit.remove(next_addr)
-            visited_addresses.append(next_addr)
-            starting_addr = next_addr
-            nearest_dist = 0
-            break
 # print(addresses_to_visit)
 # print((total_miles/18)*60)
 # print(distance_data)
