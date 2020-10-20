@@ -55,6 +55,8 @@ distance_labels = d.get_labels()  # MIGHT NOT NEED THIS
 # TODO: calculate my run time -- off first glance I think my algo runs in O(n^2)
 
 delivery_process.deliver_packages(package_hash_table, distance_data)
+print(distance_data)
+
 
 
 
