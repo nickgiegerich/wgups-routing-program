@@ -4,27 +4,35 @@ import datetime
 
 def load_truck(truck, package_data, addresses_to_visit, truck_number):
     """
+    -----------------------
+    |  RUNTIME -> O(kn)   |
+    -----------------------
+    This functions purpose is to load a truck object based on static and dynamic constraints.
 
-    :param truck:
-    :param package_data:
-    :param addresses_to_visit:
-    :param truck_number:
+    :param truck: a truck object to organize packages into
+    :param package_data: a hash table of package data
+    :param addresses_to_visit: a complete list of all addresses to visit for package deliveries
+    :param truck_number: identifies the truck currently being loaded
     :return:
     """
-    if truck_number == 1:
-        count = 0  # keeps track of each iteration of loading pkgs
-        while len(truck.truck) != truck.capacity:
-            for i in range(len(package_data.list)):
-                if package_data.list[i] is not None and package_data.list[i] not in truck.truck and package_data.list[i][1].status == 'At HUB':
+    count = 0
+    truck_empty = True
+    while truck_empty:
+        for i in range(len(package_data.list)):
 
-                    if len(truck.truck) != truck.capacity:
-                        pkg_data = package_data.list[i]
-                        pkg = package_data.list[i][1]
-                        pkg_id = float(package_data.list[i][0])
-                        notes = package_data.list[i][1].notes
-                        delivery_time = package_data.list[i][1].delivery_time
-                        address = package_data.list[i][1].address
-                        pkgs_needed = [13,14,15,16,19,20]
+            if package_data.list[i] is not None and package_data.list[i] not in truck.truck and package_data.list[i][1].status == 'At HUB':
+
+                pkg_data = package_data.list[i]
+                pkg = package_data.list[i][1]
+                pkg_id = float(package_data.list[i][0])
+                notes = package_data.list[i][1].notes
+                delivery_time = package_data.list[i][1].delivery_time
+                address = package_data.list[i][1].address
+                pkgs_needed = [13, 14, 15, 16, 19, 20]
+
+                if len(truck.truck) != truck.capacity:
+
+                    if truck_number == 1:
 
                         if pkg_id in pkgs_needed:
                             truck.add_package(pkg_data)
@@ -50,19 +58,7 @@ def load_truck(truck, package_data, addresses_to_visit, truck_number):
                             if address not in addresses_to_visit:
                                 addresses_to_visit.append(address)
 
-            count += 1
-    elif truck_number == 2:
-        count = 0  # keeps track of each iteration of loading pkgs
-        while len(truck.truck) != truck.capacity:
-            for i in range(len(package_data.list)):
-                if package_data.list[i] is not None and package_data.list[i] not in truck.truck and package_data.list[i][1].status == 'At HUB':
-
-                    if len(truck.truck) != truck.capacity:
-                        pkg_data = package_data.list[i]
-                        pkg = package_data.list[i][1]
-                        notes = package_data.list[i][1].notes
-                        delivery_time = package_data.list[i][1].delivery_time
-                        address = package_data.list[i][1].address
+                    elif truck_number == 2:
 
                         if notes == 'Can only be on truck 2' and address != '2530 S 500 E':
                             truck.add_package(pkg_data)
@@ -88,30 +84,32 @@ def load_truck(truck, package_data, addresses_to_visit, truck_number):
                             if address not in addresses_to_visit:
                                 addresses_to_visit.append(address)
 
-            count += 1
-    elif truck_number == 3:
-        count = 0  # keeps track of each iteration of loading pkgs
-        while count < 1:
-            for i in range(len(package_data.list)):
-                if package_data.list[i] is not None and package_data.list[i] not in truck.truck and package_data.list[i][
-                    1].status == 'At HUB':
-
-                    if len(truck.truck) != truck.capacity:
-                        truck.add_package(package_data.list[i])
-                        package_data.list[i][1].set_status('ON TRUCK THREE')
-                        if package_data.list[i][1].address not in addresses_to_visit:
-                            addresses_to_visit.append(package_data.list[i][1].address)
-            count += 1
-    else:
-        return 'Truck DNE'
-
+                    elif truck_number == 3:
+                        if count >= 1: truck_empty = False
+                        else:
+                            truck.add_package(package_data.list[i])
+                            package_data.list[i][1].set_status('ON TRUCK THREE')
+                            if package_data.list[i][1].address not in addresses_to_visit:
+                                addresses_to_visit.append(package_data.list[i][1].address)
+                else:
+                    truck_empty = False
+        if truck_number == 3: truck_empty = False
+        count += 1
     return truck, addresses_to_visit
 
 def deliver_packages(package_data, distance_data, hour=8, min=0):
-    # TODO: start time at 0 or 8:00
-    # TODO: load and start delivery of truck one first and wait until 9:05 to let truck two leave
-    # TODO: Once truck one is back at the hub let truck three go out for delivery
-    # TODO: write a separate function for specific details about a package at certain time
+    """
+    -----------------------
+    |  RUNTIME -> O(n^2)  |
+    -----------------------
+
+
+    :param package_data: a hash table of package data
+    :param distance_data: distance data adjacency matrix
+    :param hour: optional hour
+    :param min: optional minute
+    :return: details of package delivery, or package status at certain time
+    """
 
     # if hour == 8 and min == 0:  # default start time,
     #     time = datetime.datetime(year=100,month=1,day=1,hour=8,minute=0)
@@ -120,10 +118,10 @@ def deliver_packages(package_data, distance_data, hour=8, min=0):
     # seconds = 103.666666667 * 60
     # b = time + datetime.timedelta(0, seconds)
     # print(b.time())
-
-    t1_time = datetime.datetime(year=100, month=1, day=1, hour=8, minute=0)
-    t2_time = datetime.datetime(year=100, month=1, day=1, hour=9, minute=5)
-    t3_time = datetime.datetime(year=100, month=1, day=1, hour=10, minute=30)
+    if hour == 8 and min == 0:
+        t1_time = datetime.datetime(year=100, month=1, day=1, hour=8, minute=0)
+        t2_time = datetime.datetime(year=100, month=1, day=1, hour=9, minute=5)
+        t3_time = datetime.datetime(year=100, month=1, day=1, hour=10, minute=30)
 
     # construct truck one to load
     truck_one = Truck()
@@ -139,20 +137,23 @@ def deliver_packages(package_data, distance_data, hour=8, min=0):
     load_truck(truck_two, package_data, t2_addresses_to_visit, 2)
     load_truck(truck_three, package_data, t3_addresses_to_visit, 3)
 
-    # print(truck_one.truck)
-    # print(truck_two.truck)
-    # print(truck_three.truck)
+    print(truck_one.truck)
+    print(truck_two.truck)
+    print(truck_three.truck)
     best_t1_route = optimize(t1_addresses_to_visit, distance_data)
-    t1_miles = cost(best_t1_route, distance_data)
+    t1_miles = cost(best_t1_route, distance_data, t1_time, truck_one.truck)
 
     print('BEST ROUTE FOR T1:', best_t1_route)
     print('THE BEST DISTANCE FOR T1:', t1_miles[0])
+    print('Truck One Finish Time:', t1_miles[1].time())
 
     best_t2_route = optimize(t2_addresses_to_visit, distance_data)
-    t2_miles = cost(best_t2_route, distance_data)
+    t2_miles = cost(best_t2_route, distance_data, t2_time)
+
 
     print('BEST ROUTE FOR T2:', best_t2_route)
     print('THE BEST DISTANCE FOR T2:', t2_miles[0])
+    print('Truck Two Finish Time:', t2_miles[1].time())
 
     best_t3_route = optimize(t3_addresses_to_visit, distance_data)
     t3_miles = cost(best_t3_route, distance_data)
@@ -186,7 +187,22 @@ def optimize(addresses_to_visit, distance_data):  # RUNTIME -> O(n^2)
         addresses_to_visit = optimal_route
     return optimal_route
 
-def cost(route, cost_data, time=-1):
+
+def tick(mile, time):
+    time_in_hours = mile/18
+    time_in_secs = (time_in_hours * 60) * 60
+    time = time + datetime.timedelta(0, time_in_secs)
+    return time
+
+
+def update_pkg_status(address, pkg_data, time):
+    for pkg in pkg_data:
+        if pkg[1].address == address:
+            pkg[1].set_status('Delivered at ' + str(time.time()))
+    print(pkg_data)
+
+
+def cost(route, cost_data, time=-1, pkg_data=None):
 
     start_addr = route[0]
     total_miles = 0
@@ -203,6 +219,8 @@ def cost(route, cost_data, time=-1):
                     if addr[0] == route[count+1]:
                         total_miles += float(addr[1])
                         visited_addr.insert(0,addr[0])
+                        if time != -1: time = tick(float(addr[1]), time)
+                        if pkg_data is not None: update_pkg_status(addr[0], pkg_data, time)
                         start_addr = addr[0]
                         count += 1
                         check = True
