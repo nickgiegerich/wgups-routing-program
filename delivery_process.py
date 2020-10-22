@@ -7,13 +7,19 @@ def load_truck(truck, package_data, addresses_to_visit, truck_number):
     -----------------------
     |  RUNTIME -> O(kn)   |
     -----------------------
-    This functions purpose is to load a truck object based on static and dynamic constraints.
+
+    - For the length of package data find valid package
+    - If the truck is not full determine truck number
+    - Sort the packages on constraints
+    - As the loop iterates loosen the constraints to fill the truck
+    - Exit the loop when truck is full or no more packages are at the HUB
 
     :param truck: a truck object to organize packages into
     :param package_data: a hash table of package data
     :param addresses_to_visit: a complete list of all addresses to visit for package deliveries
     :param truck_number: identifies the truck currently being loaded
-    :return:
+    :return: truck object, addresses to visit list
+
     """
     count = 0
     truck_empty = True
@@ -97,7 +103,7 @@ def load_truck(truck, package_data, addresses_to_visit, truck_number):
         count += 1
     return truck, addresses_to_visit
 
-def deliver_packages(package_data, distance_data, hour=8, min=0):
+def deliver_packages(package_data, distance_data, hour=0, min=0):
     """
     -----------------------
     |  RUNTIME -> O(n^2)  |
@@ -118,50 +124,51 @@ def deliver_packages(package_data, distance_data, hour=8, min=0):
     # seconds = 103.666666667 * 60
     # b = time + datetime.timedelta(0, seconds)
     # print(b.time())
-    if hour == 8 and min == 0:
+    if hour == 0 and min == 0:
         t1_time = datetime.datetime(year=100, month=1, day=1, hour=8, minute=0)
         t2_time = datetime.datetime(year=100, month=1, day=1, hour=9, minute=5)
         t3_time = datetime.datetime(year=100, month=1, day=1, hour=10, minute=30)
 
-    # construct truck one to load
-    truck_one = Truck()
-    truck_two = Truck()
-    truck_three = Truck()
+        # construct truck one to load
+        truck_one = Truck()
+        truck_two = Truck()
+        truck_three = Truck()
 
-    t1_addresses_to_visit = []
-    t2_addresses_to_visit = []
-    t3_addresses_to_visit = []
+        t1_addresses_to_visit = []
+        t2_addresses_to_visit = []
+        t3_addresses_to_visit = []
 
-    # load each truck starting with truck 1
-    load_truck(truck_one, package_data, t1_addresses_to_visit, 1)
-    load_truck(truck_two, package_data, t2_addresses_to_visit, 2)
-    load_truck(truck_three, package_data, t3_addresses_to_visit, 3)
+        # load each truck starting with truck 1
+        load_truck(truck_one, package_data, t1_addresses_to_visit, 1)
+        load_truck(truck_two, package_data, t2_addresses_to_visit, 2)
+        load_truck(truck_three, package_data, t3_addresses_to_visit, 3)
 
-    print(truck_one.truck)
-    print(truck_two.truck)
-    print(truck_three.truck)
-    best_t1_route = optimize(t1_addresses_to_visit, distance_data)
-    t1_miles = cost(best_t1_route, distance_data, t1_time, truck_one.truck)
+        best_t1_route = optimize(t1_addresses_to_visit, distance_data)
+        t1_miles = cost(best_t1_route, distance_data, t1_time, truck_one.truck)
 
-    print('BEST ROUTE FOR T1:', best_t1_route)
-    print('THE BEST DISTANCE FOR T1:', t1_miles[0])
-    print('Truck One Finish Time:', t1_miles[1].time())
+        best_t2_route = optimize(t2_addresses_to_visit, distance_data)
+        t2_miles = cost(best_t2_route, distance_data, t2_time)
 
-    best_t2_route = optimize(t2_addresses_to_visit, distance_data)
-    t2_miles = cost(best_t2_route, distance_data, t2_time)
+        best_t3_route = optimize(t3_addresses_to_visit, distance_data)
+        t3_miles = cost(best_t3_route, distance_data, t3_time)
 
-
-    print('BEST ROUTE FOR T2:', best_t2_route)
-    print('THE BEST DISTANCE FOR T2:', t2_miles[0])
-    print('Truck Two Finish Time:', t2_miles[1].time())
-
-    best_t3_route = optimize(t3_addresses_to_visit, distance_data)
-    t3_miles = cost(best_t3_route, distance_data)
-
-    print('BEST ROUTE FOR T3:', best_t3_route)
-    print('THE BEST DISTANCE FOR T3:', t3_miles[0])
-
-    print('TOTAL MILEAGE USING 2-OPT:', t1_miles[0]+t2_miles[0]+t3_miles[0])
+        print('')
+        print('Delivery Details')
+        print('--------------')
+        print('Truck 1 Delivered all its packages in', t1_miles[0], 'miles')
+        print('T1 left the HUB at:', t1_time.time())
+        print('T1 returned to the HUB at:', t1_miles[1].time(), '\n')
+        print('--------------')
+        print('Truck 2 Delivered all its packages in', t2_miles[0], 'miles')
+        print('T2 left the HUB at:', t2_time.time())
+        print('T2 returned to the HUB at:', t2_miles[1].time(), '\n')
+        print('--------------')
+        print('Truck 3 Delivered all its packages in', t3_miles[0], 'miles')
+        print('T3 left the HUB at:', t3_time.time())
+        print('T3 returned to the HUB at:', t3_miles[1].time(), '\n')
+        print('--------------------------')
+        print('TOTAL TRUCK MILEAGE:', t1_miles[0]+t2_miles[0]+t3_miles[0])
+        print('--------------------------\n')
 
 def optimize(addresses_to_visit, distance_data):  # RUNTIME -> O(n^2)
     # Add the HUB to beginning and end since that is where we start and finish
@@ -199,7 +206,6 @@ def update_pkg_status(address, pkg_data, time):
     for pkg in pkg_data:
         if pkg[1].address == address:
             pkg[1].set_status('Delivered at ' + str(time.time()))
-    print(pkg_data)
 
 
 def cost(route, cost_data, time=-1, pkg_data=None):
