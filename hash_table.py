@@ -1,6 +1,3 @@
-from package import Package
-
-
 class Hash:
     def __init__(self, size=10):
         """
@@ -28,6 +25,7 @@ class Hash:
             self.list[hashed_key] = list(kvp)
             return True
         else:  # we have a collision
+            print('ERROR: that package id already exist')
             return False
 
     def get(self, key):
@@ -43,7 +41,7 @@ class Hash:
             kvp = self.list[hashed_key]
 
             if self.list[hashed_key] is None:
-                return 'No package with that ID'
+                return 'no package with that id'
             else:
                 return kvp[1]
         except IndexError:

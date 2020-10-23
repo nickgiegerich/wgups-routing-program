@@ -87,5 +87,11 @@ while not quit:
         status = str(input('Status:'))
         notes = str(input('Notes:'))
         package = Package(str(package_id),address,city,state,zip_code,delivery_time,weight,status,notes)
-        print('The following package has been created:')
-        print(package)
+        if package_hash_table.add(package_id,package):
+            print('The following package has been created:')
+            print(package)
+        else:
+            print('Please correct the issue')
+            continue
+
+
