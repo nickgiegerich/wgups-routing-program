@@ -31,6 +31,7 @@ def load_truck(truck, package_data, addresses_to_visit, truck_number):
                 pkg_data = package_data.list[i]
                 pkg = package_data.list[i][1]
                 pkg_id = float(package_data.list[i][0])
+                print(pkg_id)
                 notes = package_data.list[i][1].notes
                 delivery_time = package_data.list[i][1].delivery_time
                 address = package_data.list[i][1].address
@@ -72,19 +73,19 @@ def load_truck(truck, package_data, addresses_to_visit, truck_number):
                             if address not in addresses_to_visit:
                                 addresses_to_visit.append(address)
 
-                        elif count >= 1 and address in addresses_to_visit and address != '2530 S 500 E':
+                        elif count >= 1 and address in addresses_to_visit and address != '2530 S 500 E' and 'Wrong' not in notes:
                             truck.add_package(pkg_data)
                             pkg.set_status('ON TRUCK TWO')
                             if address not in addresses_to_visit:
                                 addresses_to_visit.append(address)
 
-                        elif count >= 2 and 'Delayed' in notes and address != '2530 S 500 E' or address in addresses_to_visit and address != '2530 S 500 E':
+                        elif count >= 2 and 'Delayed' in notes and address != '2530 S 500 E' and 'Wrong' not in notes or address in addresses_to_visit and address != '2530 S 500 E' and 'Wrong' not in notes:
                             truck.add_package(pkg_data)
                             pkg.set_status('ON TRUCK TWO')
                             if address not in addresses_to_visit:
                                 addresses_to_visit.append(address)
 
-                        elif count >= 3 and address != '2530 S 500 E' or address in addresses_to_visit and address != '2530 S 500 E':
+                        elif count >= 3 and address != '2530 S 500 E' and 'Wrong' not in notes or address in addresses_to_visit and address != '2530 S 500 E' and 'Wrong' not in notes:
                             truck.add_package(pkg_data)
                             pkg.set_status('ON TRUCK TWO')
                             if address not in addresses_to_visit:
@@ -138,19 +139,24 @@ def deliver_packages(package_data, distance_data, hour=0, min=0):
         t2_addresses_to_visit = []
         t3_addresses_to_visit = []
 
-        # load each truck starting with truck 1
+        # at 8:00 load, calculate the route, and send out truck one
         load_truck(truck_one, package_data, t1_addresses_to_visit, 1)
-        load_truck(truck_two, package_data, t2_addresses_to_visit, 2)
-        load_truck(truck_three, package_data, t3_addresses_to_visit, 3)
-
         best_t1_route = optimize(t1_addresses_to_visit, distance_data)
         t1_miles = cost(best_t1_route, distance_data, t1_time, truck_one.truck)
 
+        # at 9:05 load, calculate the route, and send out truck two
+        load_truck(truck_two, package_data, t2_addresses_to_visit, 2)
         best_t2_route = optimize(t2_addresses_to_visit, distance_data)
-        t2_miles = cost(best_t2_route, distance_data, t2_time)
+        t2_miles = cost(best_t2_route, distance_data, t2_time, truck_two.truck)
 
+        # at 10:30 correct pkg 9 address, then load, calculate the route, and send out truck three
+        package_data.get(9).set_address('410 S State St')
+        package_data.get(9).set_city('Salt Lake City')
+        package_data.get(9).set_zipcode('84111')
+        print(package_data.list)
+        load_truck(truck_three, package_data, t3_addresses_to_visit, 3)
         best_t3_route = optimize(t3_addresses_to_visit, distance_data)
-        t3_miles = cost(best_t3_route, distance_data, t3_time)
+        t3_miles = cost(best_t3_route, distance_data, t3_time, truck_three.truck)
 
         print('')
         print('Delivery Details')
@@ -169,6 +175,39 @@ def deliver_packages(package_data, distance_data, hour=0, min=0):
         print('--------------------------')
         print('TOTAL TRUCK MILEAGE:', t1_miles[0]+t2_miles[0]+t3_miles[0])
         print('--------------------------\n')
+
+    else:
+        n_t1_time = datetime.datetime(year=100, month=1, day=1, hour=8, minute=0)
+        n_t2_time = datetime.datetime(year=100, month=1, day=1, hour=9, minute=5)
+        n_t3_time = datetime.datetime(year=100, month=1, day=1, hour=10, minute=30)
+
+        n_truck_one = Truck()
+        n_truck_two = Truck()
+        n_truck_three = Truck()
+
+        n_t1_addresses_to_visit = []
+        n_t2_addresses_to_visit = []
+        n_t3_addresses_to_visit = []
+
+        # at 8:00 load, calculate the route, and send out truck one
+        load_truck(n_truck_one, package_data, n_t1_addresses_to_visit, 1)
+        n_best_t1_route = optimize(n_t1_addresses_to_visit, distance_data)
+        n_t1_miles = cost(n_best_t1_route, distance_data, n_t1_time, n_truck_one.truck)
+
+        # at 9:05 load, calculate the route, and send out truck two
+        load_truck(n_truck_two, package_data, n_t2_addresses_to_visit, 2)
+        n_best_t2_route = optimize(n_t2_addresses_to_visit, distance_data)
+        n_t2_miles = cost(n_best_t2_route, distance_data, n_t2_time, n_truck_two.truck)
+
+        # at 10:30 correct pkg 9 address, then load, calculate the route, and send out truck three
+        package_data.get(9).set_address('410 S State St')
+        package_data.get(9).set_city('Salt Lake City')
+        package_data.get(9).set_zipcode('84111')
+        print(package_data.list)
+        load_truck(n_truck_three, package_data, n_t3_addresses_to_visit, 3)
+        n_best_t3_route = optimize(n_t3_addresses_to_visit, distance_data)
+        n_t3_miles = cost(n_best_t3_route, distance_data, n_t3_time, n_truck_three.truck)
+
 
 def optimize(addresses_to_visit, distance_data):  # RUNTIME -> O(n^2)
     # Add the HUB to beginning and end since that is where we start and finish
@@ -235,6 +274,6 @@ def cost(route, cost_data, time=-1, pkg_data=None):
 
 def two_opt_swap(route, i, k):
     new_route = route.copy()  # copy route
-    new_route[i:k] = route[k - 1:i - 1:-1]  # reverse addresses from i to k, minus one, otherwise ends swap
+    new_route[i:k] = route[k - 1:i - 1:-1]  # reverse addresses from i to k, minus one, otherwise the ends swap
     return new_route  # return route with swapped addresses
 
