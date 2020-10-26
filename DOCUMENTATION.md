@@ -288,3 +288,93 @@ see the last 5 lines of the screenshot
 #### Screenshot of package 39 at 12:30 pm 
 see the last 5 lines of the screenshot
 ![Screenshot of package 39 at 12:30 pm ](./screenshots/package39_at_12_30.png)
+
+## H: Screenshots of Code Execution
+#### Screenshot shows the current path, files in directory, and the program running
+![code execution](./screenshots/code_execution.png)
+
+## I1: Strengths of The Chosen Algorithm
+The strengths of the 2-opt algorithm are the speed the ability to solve the 
+given problem and the ease of implementation. 
+
+With a time complexity of `O(n^2)` it is able to solve the problem in polynomial time.
+
+2-opt is also a known algorithm for solving the Travelling Salesman Problem (TSP).
+Since this package deliver system is much like the TSP, this algo is a good choice.
+
+Ease of implementation is also strength, the most complex part of the algorithm is
+writing a cost function that will work for someones problem.
+
+## I2: Verification of Algorithm
+Verification that the algorithm works can be seen above in the provided screenshots 
+or by running the program.
+
+## I3: Other Possible Algorithms
+Other algorithms to solve this problem could be:
+- 3-opt
+- Nearest Neighbor
+- variation of Dijkstra's
+
+## I3A: Algorithm Differences
+#### 3-opt as a potential solution
+using 3-opt would also solve the problem at hand and may even produce
+a lower total mileage. However, we do then sacrifice time because we would 
+then run in `O(n^3)` which is less optimal.
+
+#### Nearest Neighbor (NN) as a potential solution
+using NN would provide solution in the same time as 2-opt, however the path
+that NN would find would be less optimal than 2-opt. In that case 2-opt is 
+a more elegant solution.
+
+## J: Different Approach
+If I were to approach this differently I might actually implement more than
+one algorithm to solve the problem and use the CLI to choose which one to run
+given how large a dataset is. This could help in finding really optimal routes 
+for small data sets and decently good routes for really big data sets.
+
+## K1: Verification of Data Structure and Solution
+See sections C, D1, E, and F for verification that I am using a hash table
+to solve the problem and that my solution solves the problem in under `145` miles.
+
+## K1A: Efficiency
+The hash table being used to hold package objects make the program efficient
+by allowing package attributes to be updated in constant time as they are being 
+delivered. 
+
+## K1B: Overhead
+For handling the data we are able to achieve a constant time complexity
+since we have built a hash table. This means retrieval and storage of data
+happens in constant time. 
+
+Since this program is run from a local machine the only memory or bandwidth
+concerns remain within your local environment.
+
+## K1C: Implications
+Eventually adding more packages trucks and routes into the program will begin 
+to slow the process time significantly. In order to scale up this program a 
+proper backend and more object oriented programming could help keep the program 
+running efficiently.
+
+## K2: Other Data Structures
+Two other structures that could be used:
+- Priority Queue
+- Doubly Linked List
+
+These structures could be used to store/retrieve package data
+
+## K2A: Data Structures Differences
+The Priority Queue (PQ) would slow the retrieval time of grabbing objects in the
+end or middle of the list
+
+The Doubly Linked List would also slow retrieval time to `O(n)`
+
+## L: Sources
+For referencing algorithms I used the following sources:
+https://en.wikipedia.org/wiki/2-opt
+https://en.wikipedia.org/wiki/Nearest_neighbour_algorithm
+
+ 
+
+
+
+
