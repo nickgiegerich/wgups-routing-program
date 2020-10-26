@@ -41,11 +41,11 @@ class Hash:
             kvp = self.list[hashed_key]
 
             if self.list[hashed_key] is None:
-                return 'no package with that id'
+                return False
             else:
                 return kvp[1]
         except IndexError:
-            return key, 'is to large - OR - small'
+            return False
 
     def _hash_key(self, key):
         """

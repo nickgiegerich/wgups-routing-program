@@ -31,7 +31,6 @@ def load_truck(truck, package_data, addresses_to_visit, truck_number):
                 pkg_data = package_data.list[i]
                 pkg = package_data.list[i][1]
                 pkg_id = float(package_data.list[i][0])
-                print(pkg_id)
                 notes = package_data.list[i][1].notes
                 delivery_time = package_data.list[i][1].delivery_time
                 address = package_data.list[i][1].address
@@ -104,7 +103,7 @@ def load_truck(truck, package_data, addresses_to_visit, truck_number):
         count += 1
     return truck, addresses_to_visit
 
-def deliver_packages(package_data, distance_data, hour=0, min=0):
+def deliver_packages(package_data, distance_data, hour=0, min=0, pkg_id=0):
     """
     -----------------------
     |  RUNTIME -> O(n^2)  |
@@ -117,14 +116,6 @@ def deliver_packages(package_data, distance_data, hour=0, min=0):
     :param min: optional minute
     :return: details of package delivery, or package status at certain time
     """
-
-    # if hour == 8 and min == 0:  # default start time,
-    #     time = datetime.datetime(year=100,month=1,day=1,hour=8,minute=0)
-    # else:  # time has been specified for a status at that time, run program until that specified time
-    #     time = datetime.datetime(year=100,month=1,day=1,hour=hour,minute=min)
-    # seconds = 103.666666667 * 60
-    # b = time + datetime.timedelta(0, seconds)
-    # print(b.time())
     if hour == 0 and min == 0:
         t1_time = datetime.datetime(year=100, month=1, day=1, hour=8, minute=0)
         t2_time = datetime.datetime(year=100, month=1, day=1, hour=9, minute=5)
@@ -153,7 +144,6 @@ def deliver_packages(package_data, distance_data, hour=0, min=0):
         package_data.get(9).set_address('410 S State St')
         package_data.get(9).set_city('Salt Lake City')
         package_data.get(9).set_zipcode('84111')
-        print(package_data.list)
         load_truck(truck_three, package_data, t3_addresses_to_visit, 3)
         best_t3_route = optimize(t3_addresses_to_visit, distance_data)
         t3_miles = cost(best_t3_route, distance_data, t3_time, truck_three.truck)
@@ -181,6 +171,12 @@ def deliver_packages(package_data, distance_data, hour=0, min=0):
         n_t2_time = datetime.datetime(year=100, month=1, day=1, hour=9, minute=5)
         n_t3_time = datetime.datetime(year=100, month=1, day=1, hour=10, minute=30)
 
+        time_to_check = datetime.datetime(year=100, month=1, day=1, hour=hour, minute=min)
+
+        t1_end_time = datetime.datetime(year=100, month=1, day=1, hour=9, minute=32, second=40)
+        t2_end_time = datetime.datetime(year=100, month=1, day=1, hour=11, minute=3)
+        t3_end_time = datetime.datetime(year=100, month=1, day=1, hour=11, minute=45)
+
         n_truck_one = Truck()
         n_truck_two = Truck()
         n_truck_three = Truck()
@@ -189,24 +185,37 @@ def deliver_packages(package_data, distance_data, hour=0, min=0):
         n_t2_addresses_to_visit = []
         n_t3_addresses_to_visit = []
 
-        # at 8:00 load, calculate the route, and send out truck one
         load_truck(n_truck_one, package_data, n_t1_addresses_to_visit, 1)
-        n_best_t1_route = optimize(n_t1_addresses_to_visit, distance_data)
-        n_t1_miles = cost(n_best_t1_route, distance_data, n_t1_time, n_truck_one.truck)
-
-        # at 9:05 load, calculate the route, and send out truck two
         load_truck(n_truck_two, package_data, n_t2_addresses_to_visit, 2)
-        n_best_t2_route = optimize(n_t2_addresses_to_visit, distance_data)
-        n_t2_miles = cost(n_best_t2_route, distance_data, n_t2_time, n_truck_two.truck)
-
-        # at 10:30 correct pkg 9 address, then load, calculate the route, and send out truck three
         package_data.get(9).set_address('410 S State St')
         package_data.get(9).set_city('Salt Lake City')
         package_data.get(9).set_zipcode('84111')
-        print(package_data.list)
         load_truck(n_truck_three, package_data, n_t3_addresses_to_visit, 3)
+
+        if package_data.get(pkg_id):
+            package = package_data.get(pkg_id)
+        else:
+            print('That package ID does not exist')
+            return
+
+        n_best_t1_route = optimize(n_t1_addresses_to_visit, distance_data)
+        n_best_t2_route = optimize(n_t2_addresses_to_visit, distance_data)
         n_best_t3_route = optimize(n_t3_addresses_to_visit, distance_data)
-        n_t3_miles = cost(n_best_t3_route, distance_data, n_t3_time, n_truck_three.truck)
+
+        eod = datetime.datetime(year=100, month=1, day=1, hour=11, minute=45)
+
+        if time_to_check < n_t1_time:
+            print('No packages have been delivered or loaded yet. Try a time after 8:00 am.')
+        # elif time_to_check > eod:
+        #     print('All packages have been delivered here is the package you requested:')
+        #     print(package)
+        #     return True
+        elif cost(n_best_t1_route, distance_data, n_t1_time, n_truck_one.truck, time_to_check, package):
+            return True
+        elif cost(n_best_t2_route, distance_data, n_t2_time, n_truck_two.truck, time_to_check, package):
+            return True
+        elif cost(n_best_t3_route, distance_data, n_t3_time, n_truck_three.truck, time_to_check, package):
+            return True
 
 
 def optimize(addresses_to_visit, distance_data):  # RUNTIME -> O(n^2)
@@ -247,7 +256,17 @@ def update_pkg_status(address, pkg_data, time):
             pkg[1].set_status('Delivered at ' + str(time.time()))
 
 
-def cost(route, cost_data, time=-1, pkg_data=None):
+def find_pkg_status(package, check_time, pkg_data):
+    package_found = False
+    for pkg in pkg_data:
+        if pkg[1].package_id == package.package_id:
+            package_found = True
+            print('At', check_time.time(), package)
+            return package_found
+    return package_found
+
+
+def cost(route, cost_data, time=-1, pkg_data=None, check_time=0, package=None):
 
     start_addr = route[0]
     total_miles = 0
@@ -265,11 +284,15 @@ def cost(route, cost_data, time=-1, pkg_data=None):
                         total_miles += float(addr[1])
                         visited_addr.insert(0,addr[0])
                         if time != -1: time = tick(float(addr[1]), time)
+                        if check_time != 0 and time >= check_time:
+                            found = find_pkg_status(package, check_time, pkg_data)
+                            return found
                         if pkg_data is not None: update_pkg_status(addr[0], pkg_data, time)
                         start_addr = addr[0]
                         count += 1
                         check = True
                         break
+    if check_time != 0: return find_pkg_status(package, check_time, pkg_data)
     return [total_miles, time]
 
 def two_opt_swap(route, i, k):
