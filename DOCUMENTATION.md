@@ -374,6 +374,11 @@ For referencing algorithms I used the following sources:
 https://en.wikipedia.org/wiki/2-opt
 https://en.wikipedia.org/wiki/Nearest_neighbour_algorithm
 
+## M: Professional Communication
+The above documentation walks through all aspects of the project and demonstrates
+all the requirements being fulfilled and executed. For more details on how the program
+runs please see the .py files included for all code and additional comments.
+
  
 
 

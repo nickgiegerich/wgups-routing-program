@@ -1,4 +1,8 @@
 class Truck:
+    """
+    A class used to create a truck object that will hold a
+    package object.
+    """
     def __init__(self):
         self.truck = []
         self.speed = 18

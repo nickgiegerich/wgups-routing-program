@@ -1,4 +1,10 @@
 class Hash:
+    """
+        TOTAL:
+        -----------------------
+        |  RUNTIME -> O(1)    |
+        -----------------------
+    """
     def __init__(self, size=10):
         """
         constructs a list with None at a given size
@@ -12,6 +18,10 @@ class Hash:
         adds a package to the list (hash table) if that index is None,
         if that index is not None then that package already exist,
         for this program we are assuming all packages have a unique ID
+
+        -----------------------
+        |  RUNTIME -> O(1)    |
+        -----------------------
 
         :rtype: bool
         :param key: unique ID
@@ -30,8 +40,14 @@ class Hash:
 
     def get(self, key):
         """
+
         gets a singular package by the ID (key),
         if that ID is None then there is no package there
+
+        -----------------------
+        |  RUNTIME -> O(1)    |
+        -----------------------
+
         :rtype: object
         :param key: unique key
         :return: value associated to key, otherwise False
@@ -49,11 +65,17 @@ class Hash:
 
     def _hash_key(self, key):
         """
+
         private method that generates a index (bucket) by
         taking the key mod size of the list and returning that
         value
+
+        -----------------------
+        |  RUNTIME -> O(1)    |
+        -----------------------
+
         :rtype: int
         :param key:
-        :return:
+        :return: return the hash key
         """
         return int(key)

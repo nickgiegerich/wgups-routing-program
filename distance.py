@@ -1,4 +1,14 @@
 class Distance:
+    """
+    A class used to sort and clean distance data and return a list
+    to be used for finding the distances from address to address.
+
+    TOTAL:
+    -----------------------
+    |  RUNTIME -> O(kn)  |
+    -----------------------
+
+    """
 
     def __init__(self, raw_data):
         self.raw_data = raw_data
@@ -6,6 +16,20 @@ class Distance:
         self.labels = []
 
     def clean_and_sort_data(self):
+        """
+        - grab the first row of data as our labels/sub-keys
+        - get rid of blank spots
+        - while raw data still has values organize that into a clean list
+        - use the first label as key
+        - then use the sub-keys to find the distance from key
+        - see details of each line for more info
+
+        -----------------------
+        |  RUNTIME -> O(kn)  |
+        -----------------------
+
+        :return: return a clean distance data list
+        """
         self.labels = self.raw_data.pop(0)  # remove our label elements from the raw data list
 
         for i in self.labels:  # more cleaning of labels

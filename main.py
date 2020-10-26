@@ -1,6 +1,5 @@
 from distance import Distance
 from hash_table import Hash
-from truck import Truck
 from file_reader import File
 import delivery_process
 from package import Package
@@ -12,12 +11,21 @@ from package import Package
 # *                                         *
 # *******************************************
 
+#        PROGRAM TOTAL:
+#        -----------------------
+#       |  RUNTIME -> (n^2)    |
+#       -----------------------
+
 def load_package_data():
     """
     -- pass package csv into file reader class
     -- get the number of rows from csv
     -- construct a hash table based on size
     -- parse through package data to construct a hash table
+
+    -----------------------
+    |  RUNTIME -> O(n^2)  |
+    -----------------------
 
     :return: package data in  a hash table
     """
@@ -33,13 +41,16 @@ def load_distance_table():
     -- pull out the raw data from the csv
     -- clean up raw data and store in a readable way
 
+    -----------------------
+    |  RUNTIME -> O(n^2)  |
+    -----------------------
+
     :return: distance data
     """
     distance_table = File('WGUPS Distance Table.csv')
     raw_data = distance_table.parse_distance_data()
     d = Distance(raw_data)
     distance_data = d.clean_and_sort_data()
-    distance_labels = d.get_labels()  # MIGHT NOT NEED THIS
     return distance_data
 
 def command_prompt(rerun=False):
@@ -138,9 +149,6 @@ def command_prompt(rerun=False):
 
 # ------------------------ DRIVER CODE ------------------------
 
-package_hash_table = load_package_data()  # get the package hash object
-distance_data = load_distance_table()  # get the distance table object
-
 print(
     '\n'
     '***********************************************\n'
@@ -148,10 +156,9 @@ print(
     '***********************************************\n'
 )
 
-# Run the package delivery system
+package_hash_table = load_package_data()  # get the package hash object
+distance_data = load_distance_table()  # get the distance table object
 delivery_process.deliver_packages(package_hash_table, distance_data)  # Call the delivery process when the program is run
-
-# call main CLI function
-command_prompt()
+command_prompt()  # call main CLI function
 
 

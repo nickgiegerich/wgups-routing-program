@@ -1,4 +1,8 @@
 class Package:
+    """
+    A class to create a package object that then gets
+    stored into a hash table and truck object.
+    """
     def __init__(self,
                  package_id='',
                  address='',
