@@ -14,14 +14,23 @@ code for my 2-opt is in `delivery_process.py @ line 221`
 
 ## B1: Logic Comments
 The following explanation describes the process of how my program solves this problem:
+```text
+The Western Governors University Parcel Service (WGUPS) needs to determine the best route and delivery distribution for their Daily Local Deliveries (DLD) because packages 
+are not currently being consistently delivered by their promised deadline. The Salt Lake City DLD route has three trucks, two drivers, and an average of 40 packages to deliver 
+each day; each package has specific criteria and delivery requirements.
 
-`The Western Governors University Parcel Service (WGUPS) needs to determine the best route and delivery distribution for their Daily Local Deliveries (DLD) because packages are not currently being consistently delivered by their promised deadline. The Salt Lake City DLD route has three trucks, two drivers, and an average of 40 packages to deliver each day; each package has specific criteria and delivery requirements.`
+Your task is to determine the best algorithm, write code, and present a solution where all 40 packages, listed in the attached “WGUPS Package File,” will be delivered on time 
+with the least number of miles added to the combined mileage total of all trucks. The specific delivery locations are shown on the attached “Salt Lake City Downtown Map” and 
+distances to each location are given in the attached “WGUPS Distance Table.”
 
-`Your task is to determine the best algorithm, write code, and present a solution where all 40 packages, listed in the attached “WGUPS Package File,” will be delivered on time with the least number of miles added to the combined mileage total of all trucks. The specific delivery locations are shown on the attached “Salt Lake City Downtown Map” and distances to each location are given in the attached “WGUPS Distance Table.”`
+While you work on this assessment, take into consideration the specific delivery time expected for each package and the possibility that the delivery requirements—including the 
+expected delivery time—can be changed by management at any time and at any point along the chosen route. In addition, you should keep in mind that the supervisor should be 
+able to see, at assigned points, the progress of each truck and its packages by any of the variables listed in the “WGUPS Package File,” including what 
+has been delivered and what time the delivery occurred.
 
-`While you work on this assessment, take into consideration the specific delivery time expected for each package and the possibility that the delivery requirements—including the expected delivery time—can be changed by management at any time and at any point along the chosen route. In addition, you should keep in mind that the supervisor should be able to see, at assigned points, the progress of each truck and its packages by any of the variables listed in the “WGUPS Package File,” including what has been delivered and what time the delivery occurred.`
-
-`The intent is to use this solution (program) for this specific location and to use the same program in many cities in each state where WGU has a presence. As such, you will need to include detailed comments, following the industry-standard Python style guide, to make your code easy to read and to justify the decisions you made while writing your program.`
+The intent is to use this solution (program) for this specific location and to use the same program in many cities in each state where WGU has a presence. As such, you will need to 
+include detailed comments, following the industry-standard Python style guide, to make your code easy to read and to justify the decisions you made while writing your program.
+```
 
 ### Solution Explanation
 
@@ -95,12 +104,12 @@ to hold larger data sets.
 When running the program from the CLI the initial output will look like this:
 
 Input
-```bash
+```commandline
 python3 main.py
 ```
 
 Output
-```shell script
+```commandline
 ***********************************************
 * WELCOME TO THE WGUPS COMMAND LINE INTERFACE *
 ***********************************************
@@ -144,12 +153,12 @@ mileage of `85.7` miles
 
 In order to see at what time each package was delivered use the following input command:
 
-```bash
+```commandline
 details
 ```
 
 Output sample:
-```bash
+```commandline
 ['1', Package Info - ID: 1, ADDRESS: 195 W Oakland Ave, CITY: Salt Lake City, STATE: UT, ZIP: 84115, DELIVERY TIME: 10:30 AM, WEIGHT: 21, STATUS: Delivered at 08:14:40, NOTES: ]
 ['2', Package Info - ID: 2, ADDRESS: 2530 S 500 E, CITY: Salt Lake City, STATE: UT, ZIP: 84106, DELIVERY TIME: EOD, WEIGHT: 44, STATUS: Delivered at 10:52:20, NOTES: ]
 ['3', Package Info - ID: 3, ADDRESS: 233 Canyon Rd, CITY: Salt Lake City, STATE: UT, ZIP: 84103, DELIVERY TIME: EOD, WEIGHT: 2, STATUS: Delivered at 10:33:00, NOTES: Can only be on truck 2]
@@ -180,7 +189,7 @@ Please see each major block of code for comments
 The data structure used to store package data is a python list made to mimic the 
 functionality of a hash table.
 
-## Explanation of Data Structure
+## D1: Explanation of Data Structure
 The following are the insert and look up functions:
 
 ```python
@@ -223,4 +232,59 @@ def get(self, key):
     except IndexError:
         return False
 ```
-The `add()` function is meant to take a key (package id) and value (package object)
+The `add()` function is meant to take a key (package id) and value (package object).
+
+The `get()` function takes in a package id and returns that package object in `O(1)` time.
+
+This proves very useful in quickly grabbing package info for displaying or comparing in other
+parts of the program.
+
+## E: Hash Table
+See part D above for the insert function of the hash table. 
+
+Since the hash table takes in an object that is made up of package values the proper way to use this
+insert function would be similar to the example below:
+
+```python
+...
+# use a unique key
+key = packaage_id
+
+# construct a package object 
+p = Package(package_id, address, city, state, zip_code, delivery_time, weight, status, notes)
+
+# add the key/values to the hash table
+hash_table.add(key, p)
+...
+```
+
+## F: Look-Up Function
+See part D for the code behind the look up function.
+
+Since every package id in out program is unique we can use that as our hash key. See the example below
+for how the look up function works:
+
+```python
+package_id = 1
+hash_table.get(package_id)
+```
+
+output
+```commandline
+['1', Package Info - ID: 1, ADDRESS: 195 W Oakland Ave, CITY: Salt Lake City, STATE: UT, ZIP: 84115, DELIVERY TIME: 10:30 AM, WEIGHT: 21, STATUS: Delivered at 08:14:40, NOTES: ]
+```
+
+## G: Interface
+The interface for this program is a simple CLI. See section `C: Original Code` for details on 
+how this works.
+
+## G1-G3: 1st, 2nd, and 3rd Status Checks
+#### Screenshot of package 39 at 8:40 am 
+see the last 5 lines of the screenshot
+![Screenshot of package 39 at 8:40 am ](./screenshots/package39_at_8_40.png)
+#### Screenshot of package 39 at 9:45 am 
+see the last 5 lines of the screenshot
+![Screenshot of package 39 at 9:45 am ](screenshots/package39_at_9_45.png)
+#### Screenshot of package 39 at 12:30 pm 
+see the last 5 lines of the screenshot
+![Screenshot of package 39 at 12:30 pm ](./screenshots/package39_at_12_30.png)
