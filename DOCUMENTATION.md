@@ -14,22 +14,29 @@ code for my 2-opt is in `delivery_process.py @ line 221`
 
 ## B1: Logic Comments
 The following explanation describes the process of how my program solves this problem:
+
+#### Outline of Problem:
 ```text
-The Western Governors University Parcel Service (WGUPS) needs to determine the best route and delivery distribution for their Daily Local Deliveries (DLD) because packages 
-are not currently being consistently delivered by their promised deadline. The Salt Lake City DLD route has three trucks, two drivers, and an average of 40 packages to deliver 
+The Western Governors University Parcel Service (WGUPS) needs to determine the best route and delivery distribution for 
+their Daily Local Deliveries (DLD) because packages are not currently being consistently delivered by their promised 
+deadline. The Salt Lake City DLD route has three trucks, two drivers, and an average of 40 packages to deliver 
 each day; each package has specific criteria and delivery requirements.
 
-Your task is to determine the best algorithm, write code, and present a solution where all 40 packages, listed in the attached “WGUPS Package File,” will be delivered on time 
-with the least number of miles added to the combined mileage total of all trucks. The specific delivery locations are shown on the attached “Salt Lake City Downtown Map” and 
+Your task is to determine the best algorithm, write code, and present a solution where all 40 packages, listed in the 
+attached “WGUPS Package File,” will be delivered on time with the least number of miles added to the combined mileage 
+total of all trucks. The specific delivery locations are shown on the attached “Salt Lake City Downtown Map” and 
 distances to each location are given in the attached “WGUPS Distance Table.”
 
-While you work on this assessment, take into consideration the specific delivery time expected for each package and the possibility that the delivery requirements—including the 
-expected delivery time—can be changed by management at any time and at any point along the chosen route. In addition, you should keep in mind that the supervisor should be 
-able to see, at assigned points, the progress of each truck and its packages by any of the variables listed in the “WGUPS Package File,” including what 
-has been delivered and what time the delivery occurred.
+While you work on this assessment, take into consideration the specific delivery time expected for each package and 
+the possibility that the delivery requirements—including the expected delivery time—can be changed by management at 
+any time and at any point along the chosen route. In addition, you should keep in mind that the supervisor should be 
+able to see, at assigned points, the progress of each truck and its packages by any of the variables listed in the 
+“WGUPS Package File,” including what has been delivered and what time the delivery occurred.
 
-The intent is to use this solution (program) for this specific location and to use the same program in many cities in each state where WGU has a presence. As such, you will need to 
-include detailed comments, following the industry-standard Python style guide, to make your code easy to read and to justify the decisions you made while writing your program.
+The intent is to use this solution (program) for this specific location and to use the same program in many cities 
+in each state where WGU has a presence. As such, you will need to include detailed comments, following the 
+industry-standard Python style guide, to make your code easy to read and to justify the decisions you made while 
+writing your program.
 ```
 
 ### Solution Explanation
@@ -168,10 +175,14 @@ details
 
 Output sample:
 ```commandline
-['1', Package Info - ID: 1, ADDRESS: 195 W Oakland Ave, CITY: Salt Lake City, STATE: UT, ZIP: 84115, DELIVERY TIME: 10:30 AM, WEIGHT: 21, STATUS: Delivered at 08:14:40, NOTES: ]
-['2', Package Info - ID: 2, ADDRESS: 2530 S 500 E, CITY: Salt Lake City, STATE: UT, ZIP: 84106, DELIVERY TIME: EOD, WEIGHT: 44, STATUS: Delivered at 10:52:20, NOTES: ]
-['3', Package Info - ID: 3, ADDRESS: 233 Canyon Rd, CITY: Salt Lake City, STATE: UT, ZIP: 84103, DELIVERY TIME: EOD, WEIGHT: 2, STATUS: Delivered at 10:33:00, NOTES: Can only be on truck 2]
-['4', Package Info - ID: 4, ADDRESS: 380 W 2880 S, CITY: Salt Lake City, STATE: UT, ZIP: 84115, DELIVERY TIME: EOD, WEIGHT: 4, STATUS: Delivered at 08:18:20, NOTES: ]
+['1', Package Info - ID: 1, ADDRESS: 195 W Oakland Ave, CITY: Salt Lake City, STATE: UT, ZIP: 84115, DELIVERY TIME: 10:30 AM, 
+        WEIGHT: 21, STATUS: Delivered at 08:14:40, NOTES: ]
+['2', Package Info - ID: 2, ADDRESS: 2530 S 500 E, CITY: Salt Lake City, STATE: UT, ZIP: 84106, DELIVERY TIME: EOD, 
+        WEIGHT: 44, STATUS: Delivered at 10:52:20, NOTES: ]
+['3', Package Info - ID: 3, ADDRESS: 233 Canyon Rd, CITY: Salt Lake City, STATE: UT, ZIP: 84103, DELIVERY TIME: EOD, 
+        WEIGHT: 2, STATUS: Delivered at 10:33:00, NOTES: Can only be on truck 2]
+['4', Package Info - ID: 4, ADDRESS: 380 W 2880 S, CITY: Salt Lake City, STATE: UT, ZIP: 84115, DELIVERY TIME: EOD, 
+        WEIGHT: 4, STATUS: Delivered at 08:18:20, NOTES: ]
 .
 .
 .
@@ -280,7 +291,8 @@ hash_table.get(package_id)
 
 output
 ```commandline
-['1', Package Info - ID: 1, ADDRESS: 195 W Oakland Ave, CITY: Salt Lake City, STATE: UT, ZIP: 84115, DELIVERY TIME: 10:30 AM, WEIGHT: 21, STATUS: Delivered at 08:14:40, NOTES: ]
+['1', Package Info - ID: 1, ADDRESS: 195 W Oakland Ave, CITY: Salt Lake City, STATE: UT, ZIP: 84115, ...
+         ...   DELIVERY TIME: 10:30 AM, WEIGHT: 21, STATUS: Delivered at 08:14:40, NOTES: ]
 ```
 
 ## G: Interface
@@ -288,18 +300,18 @@ The interface for this program is a simple CLI. See section `C: Original Code` f
 how this works.
 
 ## G1-G3: 1st, 2nd, and 3rd Status Checks
-#### Screenshot of package 39 at 8:40 am 
+#### Screenshot of package 39 at 8:40 am (located in screenshot folder)
 see the last 5 lines of the screenshot
 ![Screenshot of package 39 at 8:40 am ](./screenshots/package39_at_8_40.png)
-#### Screenshot of package 39 at 9:45 am 
+#### Screenshot of package 39 at 9:45 am (located in screenshot folder)
 see the last 5 lines of the screenshot
 ![Screenshot of package 39 at 9:45 am ](screenshots/package39_at_9_45.png)
-#### Screenshot of package 39 at 12:30 pm 
+#### Screenshot of package 39 at 12:30 pm (located in screenshot folder)
 see the last 5 lines of the screenshot
 ![Screenshot of package 39 at 12:30 pm ](./screenshots/package39_at_12_30.png)
 
 ## H: Screenshots of Code Execution
-#### Screenshot shows the current path, files in directory, and the program running
+#### Screenshot shows the current path, files in directory, and the program running (located in screenshot folder)
 ![code execution](./screenshots/code_execution.png)
 
 ## I1: Strengths of The Chosen Algorithm
