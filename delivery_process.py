@@ -185,6 +185,18 @@ def deliver_packages(package_data, distance_data, hour=0, min=0, pkg_id=0):
         n_t2_addresses_to_visit = []
         n_t3_addresses_to_visit = []
 
+        if package_data.get(pkg_id):
+            package = package_data.get(pkg_id)
+        else:
+            print('That package ID does not exist')
+            return
+
+        if time_to_check < n_t1_time:
+            print('No packages have been delivered or loaded yet. Try a time after 8:00 am.')
+            print('Here is the package requested before it has left the HUB')
+            print(package)
+            return True
+
         load_truck(n_truck_one, package_data, n_t1_addresses_to_visit, 1)
         load_truck(n_truck_two, package_data, n_t2_addresses_to_visit, 2)
         package_data.get(9).set_address('410 S State St')
@@ -192,25 +204,13 @@ def deliver_packages(package_data, distance_data, hour=0, min=0, pkg_id=0):
         package_data.get(9).set_zipcode('84111')
         load_truck(n_truck_three, package_data, n_t3_addresses_to_visit, 3)
 
-        if package_data.get(pkg_id):
-            package = package_data.get(pkg_id)
-        else:
-            print('That package ID does not exist')
-            return
-
         n_best_t1_route = optimize(n_t1_addresses_to_visit, distance_data)
         n_best_t2_route = optimize(n_t2_addresses_to_visit, distance_data)
         n_best_t3_route = optimize(n_t3_addresses_to_visit, distance_data)
 
         eod = datetime.datetime(year=100, month=1, day=1, hour=11, minute=45)
 
-        if time_to_check < n_t1_time:
-            print('No packages have been delivered or loaded yet. Try a time after 8:00 am.')
-        # elif time_to_check > eod:
-        #     print('All packages have been delivered here is the package you requested:')
-        #     print(package)
-        #     return True
-        elif cost(n_best_t1_route, distance_data, n_t1_time, n_truck_one.truck, time_to_check, package):
+        if cost(n_best_t1_route, distance_data, n_t1_time, n_truck_one.truck, time_to_check, package):
             return True
         elif cost(n_best_t2_route, distance_data, n_t2_time, n_truck_two.truck, time_to_check, package):
             return True

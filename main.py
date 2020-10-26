@@ -5,6 +5,13 @@ from file_reader import File
 import delivery_process
 from package import Package
 
+# ******** IDENTIFICAION INFORMATION ********
+# * First Name: Nicholas                    *
+# * Last Name: Giegerich                    *
+# * ID: 001059303                           *
+# *                                         *
+# *******************************************
+
 def load_package_data():
     """
     -- pass package csv into file reader class
@@ -126,8 +133,7 @@ def command_prompt(rerun=False):
             temp_list = []
             for pkg in package_hash_table.list:
                 if pkg is not None:
-                    temp_list.append(pkg)
-            print(temp_list)
+                    print(pkg)
             command_prompt(True)
 
 # ------------------------ DRIVER CODE ------------------------

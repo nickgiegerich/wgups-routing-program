@@ -15,7 +15,7 @@ class Hash:
 
         :rtype: bool
         :param key: unique ID
-        :param value: values related to the ID
+        :param value: a package object
         :return: True if added, False otherwise
         """
         hashed_key = self._hash_key(key)
