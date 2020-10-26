@@ -6,9 +6,9 @@
 
 This program utilizes the 2-opt search algorithm to try and find the shortest path between addresses.
 The 2-opt algorithm tries to organize a route so that it does not cross over itself, which in turn
-can find an optimal path. The 2-opt algorithm runs in O(n^2) similar to the NN algorithm but to me 
+can find an optimal path. The 2-opt algorithm runs in `O(n^2)` similar to the NN algorithm but to me 
 it seems like a more elegant solution to this problem. My goal was to keep my runtime around
-O(n^2) otherwise I could've chosen 3-opt which runs in O(n^3)
+`O(n^2)` otherwise I could've chosen 3-opt which runs in `O(n^3)`
 
 code for my 2-opt is in `delivery_process.py @ line 221`
 
@@ -370,6 +370,7 @@ The Doubly Linked List would also slow retrieval time to `O(n)`
 
 ## L: Sources
 For referencing algorithms I used the following sources:
+
 https://en.wikipedia.org/wiki/2-opt
 https://en.wikipedia.org/wiki/Nearest_neighbour_algorithm
 
