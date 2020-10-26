@@ -100,7 +100,7 @@ python3 main.py
 ```
 
 Output
-```bash
+```shell script
 ***********************************************
 * WELCOME TO THE WGUPS COMMAND LINE INTERFACE *
 ***********************************************
