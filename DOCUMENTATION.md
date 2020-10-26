@@ -137,15 +137,24 @@ TOTAL TRUCK MILEAGE: 85.7
 
 *********************** COMMANDS ***********************
 
- - to insert a package into the table type [a]dd
- - for package inquiry type [i]nquiry
- - to see package details at a specific time type [t]ime
- - to print details of all packages type [d]etails
+ - to add a package into the table type a
 
-!!!! To exit or quit the program type [q]uit !!!!
+ - for package inquiry type i
+
+ - to see package details at a specific time type t
+
+ - to print details of all packages type d
+
+!!!! To exit or quit the program type q !!!!
+
+----------------------   OR   ----------------------
+
+Press CTRL+C on your keyboard to exit the program
 
 *********************** END COMMANDS ***********************
-Enter command here (to see all commands type [h]elp):
+
+
+Enter command here (to see all commands type h):
 ```
 
 As seen in the above section the program executes the delivery process delivering all the packages in a total

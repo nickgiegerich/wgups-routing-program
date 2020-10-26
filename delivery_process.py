@@ -175,7 +175,7 @@ def find_pkg_status(package, check_time, pkg_data):
     for pkg in pkg_data:
         if pkg[1].package_id == package.package_id:
             package_found = True
-            print('At', check_time.time(), package)
+            print('\nAt', check_time.time(), '\n\n', package)
             return package_found
     return package_found
 
@@ -259,7 +259,6 @@ def deliver_packages(package_data, distance_data, hour=0, min=0, pkg_id=0):
         if package_data.get(pkg_id):
             package = package_data.get(pkg_id)
         else:
-            print('That package ID does not exist')
             return
 
         if time_to_check < n_t1_time:

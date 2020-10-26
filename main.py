@@ -68,14 +68,16 @@ def command_prompt(rerun=False):
     """
     if not rerun:
         print('*********************** COMMANDS ***********************\n')
-        print(' - to insert a package into the table type [a]dd')
-        print(' - for package inquiry type [i]nquiry')
-        print(' - to see package details at a specific time type [t]ime')
-        print(' - to print details of all packages type [d]etails\n')
-        print('!!!! To exit or quit the program type [q]uit !!!!\n')
-        print('*********************** END COMMANDS ***********************')
+        print(' - to add a package into the table type a\n')
+        print(' - for package inquiry type i\n')
+        print(' - to see package details at a specific time type t\n')
+        print(' - to print details of all packages type d\n')
+        print('!!!! To exit or quit the program type q !!!!\n')
+        print('----------------------   OR   ----------------------\n')
+        print('Press CTRL+C on your keyboard to exit the program\n')
+        print('*********************** END COMMANDS ***********************\n')
 
-    user_input = input('Enter command here (to see all commands type [h]elp):\n')
+    user_input = input('\nEnter command here (to see all commands type h):\n').lower()
 
     if user_input == 'q' or user_input == 'quit': exit('Thank you for using WGUPS!')
     if user_input == 'h' or user_input == 'help': command_prompt(False)
@@ -83,51 +85,53 @@ def command_prompt(rerun=False):
     quit = False
     while not quit:
 
-        if user_input == 'a' or user_input == 'add':
+        if user_input == 'a':
             try:
+                print('\n')
                 package_id = int(input('Enter a package id:'))
-                if package_id == 'q' or package_id == 'quit': exit('Thank you for using WGUPS!')
-                address = str(input('Street address:'))
-                city = str(input('City:'))
-                state = str(input('State:'))
-                zip_code = str(input('Zip code:'))
-                delivery_time = str(input('Delivery time:'))
-                weight = str(input('Weight:'))
-                status = str(input('Status:'))
-                notes = str(input('Notes:'))
+                address = str(input('\nStreet address:'))
+                city = str(input('\nCity:'))
+                state = str(input('\nState:'))
+                zip_code = str(input('\nZip code:'))
+                delivery_time = str(input('\nDelivery time:'))
+                weight = str(input('\nWeight:'))
+                status = str(input('\nStatus:'))
+                notes = str(input('\nNotes:'))
                 package = Package(str(package_id), address, city, state, zip_code, delivery_time, weight, status, notes)
 
                 if package_hash_table.add(package_id, package):
-                    print('The following package has been created:')
+                    print('The following package has been created:\n')
                     print(package)
                     command_prompt(True)
                 else:
-                    print('Please correct the issue')
+                    print('\nPlease correct the issue and try again\n')
                     command_prompt(True)
 
             except ValueError:
                 print('\nERROR: package id must be a integer\n')
                 command_prompt(True)
 
-        if user_input == 'i' or user_input == 'inquiry':
+        if user_input == 'i':
             try:
-                package_id = int(input('Enter a package id:'))
-                if package_id == 'q' or package_id == 'quit': exit('Thank you for using WGUPS!')
+                package_id = int(input('\nEnter a package id:'))
 
-                package = package_hash_table.get(package_id)
-                if package:
+                if package_hash_table.get(package_id):
+                    package = package_hash_table.get(package_id)
                     print(package)
                     command_prompt(True)
+                else:
+                    print('\nPlease correct the issue and try again\n')
+                    command_prompt(True)
 
             except ValueError:
                 print('\nERROR: package id must be a integer\n')
                 command_prompt(True)
 
-        if user_input == 't' or user_input == 'type':
+        if user_input == 't':
             try:
-                package_id = int(input('Enter a package id:'))
-                hour = int(input('Enter an hour (Ex. 10):'))
-                minute = int(input('Enter a minute (Ex. 30):'))
+                package_id = int(input('\nEnter a package id:'))
+                hour = int(input('\nEnter an hour between 1-24:'))
+                minute = int(input('\nEnter a minute between 0-59:'))
 
                 new_pkg_hash = load_package_data()
                 new_dst_data = load_distance_table()
@@ -138,13 +142,15 @@ def command_prompt(rerun=False):
                 print('\nERROR: input must be an integer\n')
                 command_prompt(True)
 
-        if user_input == 'd' or user_input == 'details':
-            print('All package data is below:')
+        if user_input == 'd':
+            print('\nAll package data is below:\n')
 
-            temp_list = []
             for pkg in package_hash_table.list:
                 if pkg is not None:
                     print(pkg)
+            command_prompt(True)
+        else:
+            print('\nThat command is not recognized, please try again.\n')
             command_prompt(True)
 
 # ------------------------ DRIVER CODE ------------------------

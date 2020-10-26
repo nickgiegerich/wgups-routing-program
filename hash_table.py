@@ -28,16 +28,18 @@ class Hash:
         :param value: a package object
         :return: True if added, False otherwise
         """
-        hashed_key = self._hash_key(key)
-        kvp = [key, value]
+        try:
+            hashed_key = self._hash_key(key)
+            kvp = [key, value]
 
-        if self.list[hashed_key] is None:
-            self.list[hashed_key] = list(kvp)
-            return True
-        else:  # we have a collision
-            print('ERROR: that package id already exist')
-            return False
-
+            if self.list[hashed_key] is None:
+                self.list[hashed_key] = list(kvp)
+                return True
+            else:  # we have a collision
+                print('ERROR: that package id already exist')
+                return False
+        except IndexError:
+            print('\n ERROR: Please choose an id in the range of 41 -', len(self.list))
     def get(self, key):
         """
 
@@ -57,10 +59,12 @@ class Hash:
             kvp = self.list[hashed_key]
 
             if self.list[hashed_key] is None:
+                print('\nThat package ID does NOT exist')
                 return False
             else:
                 return kvp[1]
         except IndexError:
+            print('\nThat package ID does NOT exist')
             return False
 
     def _hash_key(self, key):
