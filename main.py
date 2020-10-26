@@ -57,9 +57,10 @@ def command_prompt(rerun=False):
         print('!!!! To exit or quit the program type [q]uit !!!!\n')
         print('*********************** END COMMANDS ***********************')
 
-    user_input = input('Enter command here (to see all commands type all:')
+    user_input = input('Enter command here (to see all commands type [h]elp):\n')
 
     if user_input == 'q' or user_input == 'quit': exit('Thank you for using WGUPS!')
+    if user_input == 'h' or user_input == 'help': command_prompt(False)
 
     quit = False
     while not quit:
@@ -134,7 +135,12 @@ def command_prompt(rerun=False):
 package_hash_table = load_package_data()  # get the package hash object
 distance_data = load_distance_table()  # get the distance table object
 
-print('WELCOME TO THE WGUPS COMMAND LINE INTERFACE')
+print(
+    '\n'
+    '***********************************************\n'
+    '* WELCOME TO THE WGUPS COMMAND LINE INTERFACE *\n'
+    '***********************************************\n'
+)
 
 # Run the package delivery system
 delivery_process.deliver_packages(package_hash_table, distance_data)  # Call the delivery process when the program is run
