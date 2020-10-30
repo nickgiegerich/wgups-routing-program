@@ -70,6 +70,7 @@ def command_prompt(rerun=False):
         print('*********************** COMMANDS ***********************\n')
         print(' - to add a package into the table type a\n')
         print(' - for package inquiry type i\n')
+        print(' - for all package info at a specific time type ap\n')
         print(' - to see package details at a specific time type t\n')
         print(' - to print details of all packages type d\n')
         print('!!!! To exit or quit the program type q !!!!\n')
@@ -129,13 +130,14 @@ def command_prompt(rerun=False):
 
         if user_input == 't':
             try:
+                status = 't'
                 package_id = int(input('\nEnter a package id:'))
                 hour = int(input('\nEnter an hour between 1-24:'))
                 minute = int(input('\nEnter a minute between 0-59:'))
 
                 new_pkg_hash = load_package_data()
                 new_dst_data = load_distance_table()
-                delivery_process.deliver_packages(new_pkg_hash, new_dst_data, hour, minute, package_id)
+                delivery_process.deliver_packages(new_pkg_hash, new_dst_data, status, hour, minute, package_id)
                 command_prompt(True)
 
             except ValueError:
@@ -149,6 +151,21 @@ def command_prompt(rerun=False):
                 if pkg is not None:
                     print(pkg)
             command_prompt(True)
+
+        if user_input == 'ap':
+            try:
+                status = 'ap'
+                hour = int(input('\nEnter an hour between 1-24:'))
+                minute = int(input('\nEnter a minute between 0-59:'))
+
+                new_pkg_hash = load_package_data()
+                new_dst_data = load_distance_table()
+                delivery_process.deliver_packages(new_pkg_hash, new_dst_data, status, hour, minute)
+                command_prompt(True)
+
+            except ValueError:
+                print('\nERROR: input must be an integer\n')
+                command_prompt(True)
         else:
             print('\nThat command is not recognized, please try again.\n')
             command_prompt(True)

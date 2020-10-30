@@ -8,7 +8,7 @@ This program utilizes the 2-opt search algorithm to try and find the shortest pa
 The 2-opt algorithm tries to organize a route so that it does not cross over itself, which in turn
 can find an optimal path. The 2-opt algorithm runs in `O(n^2)` similar to the NN algorithm but to me 
 it seems like a more elegant solution to this problem. My goal was to keep my runtime around
-`O(n^2)` otherwise I could've chosen 3-opt which runs in `O(n^3)`
+`O(n^2)` otherwise, I could've chosen the 3-opt algorithm which runs in `O(n^3)`.
 
 code for my 2-opt is in `delivery_process.py @ line 221`
 
@@ -52,25 +52,68 @@ writing your program.
 - Store the data so that it is easily iterable/retrievable.
 
 ##### Run the main program that delivers the packages 
-- A call to the `deliver_packages()` will instantiate three truck objects, then using the those truck objects
-along with package data will sort package objects into truck 1, 2, or 3 based on constraints. 
+- A call to the `deliver_packages()` function will instantiate three truck objects. Then using those truck objects and the
+ package data the program will sort the packages into trucks 1, 2, and 3. 
 - While trucks are sorted with packages, address list are created and stored with which addresses will need 
 to be visited with a certain truck.
-- Once the trucks are loaded with packages and each truck has a list of addresses to visit the list of addresses
-are optimized using the distance data loaded earlier.
+- Once the trucks are loaded with packages and each truck has a list of addresses to visit then the address lists are sorted
+to find the optimal path.
 - To optimize the addresses each list is passed into the `optimize()` function that will look at each address and
 iteratively run a 2-opt swap then compare the distance total to the previous version of the route. If the new version 
-is shorter that becomes the best route. The 2-opt swap essentially swaps every addresses with every other address until
+is shorter then the previous version then that becomes the best route. The 2-opt swap essentially swaps every address with every other address until
 an optimal route is found.
 - Each time a route is 2-opt swapped it is run through the `cost()` function which totals the distance to visit each address
 in the given address list starting at index 0.
 
-#### Command Line Interface (CLI)
+#### Command line interface (CLI)
 - The rest of the program utilizes a CLI so that end users can do the following things:
 - insert a package into the hash table
 - look up a package by id
 - look up a package by id and time
 - see details of all packages
+
+#### 2-Opt algorithm overview:
+The basis for the 2-opt algorithm is as follows:
+- initiate a random list of nodes and assign as the optimal route
+- from the starting node + 1 (i) for the length of nodes to end - 1
+- then from start node + 2 (k) for the length of nodes
+- create a new route by making a copy of the optimal route then swap nodes from i to k
+- on each route count the cost to travel from node to node starting at the first node
+- if the new route cost is less than the current optimal route assign optimal route to new route 
+- repeat until the routes can no longer be optimized
+
+The 2-opt algorithm on its own not considering the function to calculate cost for each route will run 
+in `O(n^2)`. Depending on how the cost function is designed the minimum speed would be `O(n^2)`.
+
+Below is the pseudocode for the 2-opt algorithm:
+
+```text
+two_opt_swap(route, i, k)
+    new_route = route
+    new_route from i to k = route from k-1 to i-1
+    return new_route
+```
+
+```text
+optimal_route(list_of_nodes)
+    optimal_route = list_of_nodes
+    while no improvements
+        for i=1 to i list_of_nodes - 1
+            for k = i + 1 to list_of_nodes
+                new_route = two_opt_swap(optimal_route, i, k)
+                cost_one = cost(new_route)
+                cost_two = cost(optimal_route)
+                if cost_one < cost_two
+                    optimal_route = new_route
+                    continue improving
+    return optimal_route
+```
+(CROES, 1958)
+
+    
+
+
+
 
 ## B2: Application of Programming Models
 This section does not directly apply to this project any longer. This is due to all the data being stored 
@@ -97,15 +140,26 @@ should be able to take this project and enhance or repair as they see fit.
 
 ## B6: Self-Adjusting Data Structures
 The hash table that stores the package data is the main self-adjusting data structure used in this 
-program. This data structure has 4 functions
+program. This data structure has 4 functions:
+
+
 `__init__()`
 `add()`
 `get()`
 `_hash_key()`
 
 The `__init__()` function will initialize the data structure using a given size parameter. For this program
-I choose to have the hash table double in size on initiation. Which may have to be revised if the program begins
-to hold larger data sets.
+I've chosen to have the hash table double in size on creation. The feature of having the hash table double in size
+when it's created may need to be revisited in order for the program to scale up.
+
+The data is stored using the `add()` function. This function makes use of the private `_hash_key()` method that will create
+a unique index to store an item. This allows for items to be added to the data structure in `O(1)` time. 
+
+The data is accessed using the `get()` function. This function will take the id (index) of the item and use the `_hash_key()`
+method to index the items location. This allows for the data structure to access items in `O(1)` time.
+
+By scaling up the size of the structure and having unique ID's the time complexity will remain constant. If the table becomes 
+full and item ID's are not unique collisions will occur. Collisions will cause the time complexity of the structure to increase.
 
 ## C: Original Code
 When running the program from the CLI the initial output will look like this:
@@ -256,8 +310,10 @@ The `add()` function is meant to take a key (package id) and value (package obje
 
 The `get()` function takes in a package id and returns that package object in `O(1)` time.
 
-This proves very useful in quickly grabbing package info for displaying or comparing in other
-parts of the program.
+This data structure is used to store package objects. This allows for packages to be added and retrieved in constant time.
+If a package objects status needs to be updated and the ID is known then that can be done in `O(1)` time. Likewise, if a 
+package needs to be added to the table then this can be done in constant time. The only information needed to retrieve a package
+from the table is the package ID. If a package is to be added to the table then the ID needs to not already exist in the hash table.
 
 ## E: Hash Table
 See part D above for the insert function of the hash table. 
@@ -300,15 +356,15 @@ The interface for this program is a simple CLI. See section `C: Original Code` f
 how this works.
 
 ## G1-G3: 1st, 2nd, and 3rd Status Checks
-#### Screenshot of package 39 at 8:40 am (located in screenshot folder)
+#### Screenshot of all packages at 8:40 am (located in screenshot folder)
 see the last 5 lines of the screenshot
-![Screenshot of package 39 at 8:40 am ](./screenshots/package39_at_8_40.png)
-#### Screenshot of package 39 at 9:45 am (located in screenshot folder)
+![Screenshot of all packages at 8:40 am ](./screenshots/packages_at_8_40.png)
+#### Screenshot of all packages at 9:45 am (located in screenshot folder)
 see the last 5 lines of the screenshot
-![Screenshot of package 39 at 9:45 am ](screenshots/package39_at_9_45.png)
-#### Screenshot of package 39 at 12:30 pm (located in screenshot folder)
+![Screenshot of all packages at 9:45 am ](screenshots/packages_at_9_45.png)
+#### Screenshot of all packages at 12:30 pm (located in screenshot folder)
 see the last 5 lines of the screenshot
-![Screenshot of package 39 at 12:30 pm ](./screenshots/package39_at_12_30.png)
+![Screenshot of all packages at 12:30 pm ](./screenshots/packages_at_12_30.png)
 
 ## H: Screenshots of Code Execution
 #### Screenshot shows the current path, files in directory, and the program running (located in screenshot folder)
@@ -358,9 +414,12 @@ See sections C, D1, E, and F for verification that I am using a hash table
 to solve the problem and that my solution solves the problem in under `145` miles.
 
 ## K1A: Efficiency
-The hash table being used to hold package objects make the program efficient
-by allowing package attributes to be updated in constant time as they are being 
-delivered. 
+The data being used in the structure is a series of data points that make up a 
+package object. Each package object is created and then stored in the hash table using
+the package ID as a unique key. Using this unique key the data can then be retrieved from the
+hash table in constant time. The unique key translates directly into the index that 
+the package is located in the structure. This allows package data points to be accessed 
+and updated as the program runs. 
 
 ## K1B: Overhead
 For handling the data we are able to achieve a constant time complexity
@@ -371,28 +430,44 @@ Since this program is run from a local machine the only memory or bandwidth
 concerns remain within your local environment.
 
 ## K1C: Implications
-Eventually adding more packages trucks and routes into the program will begin 
-to slow the process time significantly. In order to scale up this program a 
-proper backend and more object oriented programming could help keep the program 
-running efficiently.
+When scaling the application to work with more packages, trucks, and cities there are many things to consider. 
+The underlying data structure will need to become large enough to minimize collisions but not so large that it takes
+up unneeded space. Eventually, if the solution is being utilized in other cities with more packages, trucks, etc. then 
+moving data to a database should be a consideration. The database could then be shared among all companies while still
+being downloaded locally into a hash table for optimizing a route. This data could then be returned to the database with
+updated information. 
 
 ## K2: Other Data Structures
 Two other structures that could be used:
 - Priority Queue
 - Doubly Linked List
 
-These structures could be used to store/retrieve package data
+These two structures could be used to store/retrieve package data like the hash table.
 
 ## K2A: Data Structures Differences
 The Priority Queue (PQ) would slow the retrieval time of grabbing objects in the
-end or middle of the list
+end or middle of the list. If data needs to be accessed at any location in a hash table it is most likely retrieved
+in constant time. On the other hand, retrieving data from PQ's is usually done from the front of the list. This may cause
+a slow down in retrieval if data needed to retrieved from anywhere except the front. 
 
-The Doubly Linked List would also slow retrieval time to `O(n)`
+The Doubly Linked List (DLL) would also slow retrieval time to `O(n)`. DLL's only know what item is before them and after them.
+Meaning that in order to retrieve an item from the middle of a DLL we would need to traverse the list from the beginning.
+So even if we know the ID of the item in the DLL we don't know what index that item exist at. While in the hash table the 
+ID is the key that can be converted into the index of our item.
 
 ## L: Sources
-For referencing algorithms I used the following sources:
 
-https://en.wikipedia.org/wiki/2-opt
+G. A. CROES. (1958). A method for solving traveling salesman problems. Operations Res. 6 (1958) , pp., 791-812. https://en.wikipedia.org/wiki/2-opt
+
+M. M. FLOOD. (1956). The traveling-salesman problem. Operations Res. 4 (1956) , pp., 61-75. https://en.wikipedia.org/wiki/2-opt
+
+G. Gutin, A. Yeo and A. Zverovich, Traveling salesman should not be greedy: domination analysis of greedy-type heuristics for the TSP. Discrete Applied Mathematics 117 (2002), 81–86.
+https://en.wikipedia.org/wiki/Nearest_neighbour_algorithm
+
+J. Bang-Jensen, G. Gutin and A. Yeo, When the greedy algorithm fails. Discrete Optimization 1 (2004), 121–127.
+https://en.wikipedia.org/wiki/Nearest_neighbour_algorithm
+
+G. Bendall and F. Margot, Greedy Type Resistance of Combinatorial Problems, Discrete Optimization 3 (2006), 288–298.
 https://en.wikipedia.org/wiki/Nearest_neighbour_algorithm
 
 ## M: Professional Communication
