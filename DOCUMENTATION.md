@@ -6,9 +6,10 @@
 
 This program utilizes the 2-opt search algorithm to try and find the shortest path between addresses.
 The 2-opt algorithm tries to organize a route so that it does not cross over itself, which in turn
-can find an optimal path. The 2-opt algorithm runs in `O(n^2)` similar to the NN algorithm but to me 
-it seems like a more elegant solution to this problem. My goal was to keep my runtime around
-`O(n^2)` otherwise, I could've chosen the 3-opt algorithm which runs in `O(n^3)`.
+can find an optimal path (CROES, 1958). The 2-opt algorithm runs in `O(n^2)` similar to the NN algorithm but to me 
+it seems like a more elegant solution to this problem. The NN algorithm will usually not return the most optimal tour 
+(Gutin et al., 2002). My goal was to keep my runtime around `O(n^2)` otherwise, I could've chosen the 3-opt 
+algorithm which runs in `O(n^3)`.
 
 code for my 2-opt is in `delivery_process.py @ line 221`
 
@@ -156,10 +157,10 @@ The data is stored using the `add()` function. This function makes use of the pr
 a unique index to store an item. This allows for items to be added to the data structure in `O(1)` time. 
 
 The data is accessed using the `get()` function. This function will take the id (index) of the item and use the `_hash_key()`
-method to index the items location. This allows for the data structure to access items in `O(1)` time.
+method to find the item index. This allows for the data structure to access items in `O(1)` time.
 
 By scaling up the size of the structure and having unique ID's the time complexity will remain constant. If the table becomes 
-full and item ID's are not unique collisions will occur. Collisions will cause the time complexity of the structure to increase.
+full and item ID is not unique then a collision will occur. Collisions will cause the time complexity of the structure to increase.
 
 ## C: Original Code
 When running the program from the CLI the initial output will look like this:
@@ -447,28 +448,21 @@ These two structures could be used to store/retrieve package data like the hash 
 ## K2A: Data Structures Differences
 The Priority Queue (PQ) would slow the retrieval time of grabbing objects in the
 end or middle of the list. If data needs to be accessed at any location in a hash table it is most likely retrieved
-in constant time. On the other hand, retrieving data from PQ's is usually done from the front of the list. This may cause
-a slow down in retrieval if data needed to retrieved from anywhere except the front. 
+in constant time. On the other hand, retrieving data from PQ's is usually done from the front of the list. This may 
+cause a slow down in retrieval if the data exist anywhere except at the front of the queue.
 
 The Doubly Linked List (DLL) would also slow retrieval time to `O(n)`. DLL's only know what item is before them and after them.
 Meaning that in order to retrieve an item from the middle of a DLL we would need to traverse the list from the beginning.
-So even if we know the ID of the item in the DLL we don't know what index that item exist at. While in the hash table the 
+So even if we know the ID of the item in the DLL we don't know what index that item exists. While in the hash table the 
 ID is the key that can be converted into the index of our item.
 
 ## L: Sources
 
 G. A. CROES. (1958). A method for solving traveling salesman problems. Operations Res. 6 (1958) , pp., 791-812. https://en.wikipedia.org/wiki/2-opt
 
-M. M. FLOOD. (1956). The traveling-salesman problem. Operations Res. 4 (1956) , pp., 61-75. https://en.wikipedia.org/wiki/2-opt
-
 G. Gutin, A. Yeo and A. Zverovich, Traveling salesman should not be greedy: domination analysis of greedy-type heuristics for the TSP. Discrete Applied Mathematics 117 (2002), 81–86.
 https://en.wikipedia.org/wiki/Nearest_neighbour_algorithm
 
-J. Bang-Jensen, G. Gutin and A. Yeo, When the greedy algorithm fails. Discrete Optimization 1 (2004), 121–127.
-https://en.wikipedia.org/wiki/Nearest_neighbour_algorithm
-
-G. Bendall and F. Margot, Greedy Type Resistance of Combinatorial Problems, Discrete Optimization 3 (2006), 288–298.
-https://en.wikipedia.org/wiki/Nearest_neighbour_algorithm
 
 ## M: Professional Communication
 The above documentation walks through all aspects of the project and demonstrates
